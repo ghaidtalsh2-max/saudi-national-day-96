@@ -1,0 +1,17 @@
+{
+  "name": "saudi-national-day-96",
+  "version": "1.0.0",
+  "private": true,
+  "description": "تجربة ويب تفاعلية سينمائية بمناسبة اليوم الوطني السعودي 96 – 2026",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2"
+  },
+  "dependencies": {
+    "three": "^0.186.0"
+  }
+}

@@ -1,0 +1,679 @@
+/* ==========================================================================
+   SAUDI VIRTUAL WORLD 96 — MASTER STYLESHEET (CINEMATIC HUD & WORLD)
+   - Zero bulky cards, zero dashboards, zero clutter
+   - Pure immersive virtual world viewport
+   - Minimalist, high-end Arabic typography & HUD controls
+   ========================================================================== */
+
+:root {
+  --saudi-green: #006c35;
+  --saudi-green-deep: #004d25;
+  --saudi-green-glow: rgba(0, 108, 53, 0.45);
+  --saudi-gold: #d4af37;
+  --saudi-gold-light: #f3e5ab;
+  --saudi-gold-glow: rgba(212, 175, 55, 0.5);
+  --sand-warm: #d9b37a;
+  --sand-cream: #faf5ee;
+  --hud-bg: rgba(18, 22, 18, 0.65);
+  --hud-border: rgba(212, 175, 55, 0.35);
+  --font-arabic-title: 'Reem Kufi', 'Amiri', 'Tajawal', serif;
+  --font-arabic-body: 'Tajawal', sans-serif;
+  --font-calligraphy: 'Aref Ruqaa', 'Amiri', serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #0d120f;
+  color: #faf5ee;
+  font-family: var(--font-arabic-body);
+  direction: rtl;
+}
+
+/* ==========================================================================
+   1. MASTER 3D VIEWPORT CONTAINER
+   ========================================================================== */
+#world-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  overflow: hidden;
+  background: #000;
+}
+
+#world-viewport canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* ==========================================================================
+   2. MINIMALIST PERSISTENT HUD (TOP BAR)
+   ========================================================================== */
+.world-master-hud {
+  position: absolute;
+  top: 18px;
+  left: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.hud-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.hud-btn {
+  background: var(--hud-bg);
+  border: 1px solid var(--hud-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #faf5ee;
+  font-family: var(--font-arabic-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.hud-btn:hover {
+  background: rgba(0, 108, 53, 0.75);
+  border-color: var(--saudi-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px var(--saudi-gold-glow);
+}
+
+.hud-btn:active {
+  transform: translateY(0);
+}
+
+.sound-wave-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 12px;
+}
+
+.sound-wave-icon span {
+  width: 2px;
+  height: 100%;
+  background-color: var(--saudi-gold);
+  border-radius: 2px;
+  animation: waveBar 1.2s infinite ease-in-out;
+}
+
+.sound-wave-icon span:nth-child(2) { animation-delay: 0.2s; height: 60%; }
+.sound-wave-icon span:nth-child(3) { animation-delay: 0.4s; height: 80%; }
+
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.sound-muted .sound-wave-icon span {
+  animation: none;
+  height: 2px !important;
+  background-color: #888;
+}
+
+/* Discrete Center Stage Scrubber */
+.world-stage-tracker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--hud-bg);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 6px 14px;
+  border-radius: 999px;
+  pointer-events: auto;
+}
+
+.stage-dot-btn {
+  background: none;
+  border: none;
+  color: rgba(250, 245, 238, 0.6);
+  font-family: var(--font-arabic-body);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stage-dot-btn::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(250, 245, 238, 0.3);
+  transition: all 0.3s ease;
+}
+
+.stage-dot-btn:hover {
+  color: #fff;
+}
+
+.stage-dot-btn.active {
+  background: var(--saudi-green);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 14px var(--saudi-green-glow);
+}
+
+.stage-dot-btn.active::before {
+  background: var(--saudi-gold);
+  transform: scale(1.4);
+}
+
+/* ==========================================================================
+   3. CINEMATIC SUBTITLE & PROMPT OVERLAY (BOTTOM HUD)
+   ========================================================================== */
+.world-bottom-hud {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  max-width: 800px;
+  width: 90%;
+  text-align: center;
+}
+
+.cinematic-caption-box {
+  background: linear-gradient(180deg, rgba(13, 18, 15, 0.85) 0%, rgba(8, 10, 8, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 18px;
+  padding: 12px 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.1);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.caption-title {
+  font-family: var(--font-arabic-title);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--saudi-gold);
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.caption-body {
+  font-size: 14px;
+  color: #e5dfd5;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.caption-prompt-action {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--saudi-gold-light);
+  background: rgba(0, 108, 53, 0.4);
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  animation: pulseGold 2s infinite ease-in-out;
+}
+
+@keyframes pulseGold {
+  0%, 100% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }
+  50% { box-shadow: 0 0 16px var(--saudi-gold-glow); }
+}
+
+/* ==========================================================================
+   4. OPENING WORLD HERO INSCRIPTION (FADES OUT ON JOURNEY START)
+   ========================================================================== */
+.opening-world-inscription {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s ease;
+}
+
+.opening-world-inscription.vanished {
+  opacity: 0;
+  transform: translate(-50%, -60%) scale(0.95);
+  pointer-events: none;
+}
+
+.year-badge-royal {
+  font-family: var(--font-arabic-body);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--saudi-gold);
+  letter-spacing: 2px;
+  background: rgba(13, 18, 15, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 6px 20px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.opening-world-title {
+  font-family: var(--font-arabic-title);
+  font-size: clamp(34px, 5.5vw, 68px);
+  font-weight: 800;
+  color: #faf5ee;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 108, 53, 0.6);
+  line-height: 1.15;
+  margin-bottom: 6px;
+}
+
+.opening-world-number {
+  font-family: var(--font-arabic-title);
+  font-size: clamp(48px, 8vw, 110px);
+  font-weight: 900;
+  background: linear-gradient(180deg, #ffffff 0%, var(--saudi-gold-light) 60%, var(--saudi-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  line-height: 0.95;
+  margin-bottom: 12px;
+}
+
+.opening-world-slogan {
+  font-family: var(--font-calligraphy);
+  font-size: clamp(22px, 3.2vw, 38px);
+  color: var(--saudi-gold-light);
+  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.7);
+  margin-bottom: 24px;
+}
+
+.btn-embark-world {
+  pointer-events: auto;
+  background: linear-gradient(135deg, var(--saudi-green) 0%, var(--saudi-green-deep) 100%);
+  border: 1px solid var(--saudi-gold);
+  color: #fff;
+  font-family: var(--font-arabic-body);
+  font-size: 17px;
+  font-weight: 700;
+  padding: 14px 38px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(0, 108, 53, 0.5), 0 0 20px var(--saudi-gold-glow);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-embark-world:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(0, 108, 53, 0.8), 0 0 30px var(--saudi-gold);
+}
+
+.btn-embark-world .embark-arrow {
+  transition: transform 0.3s ease;
+}
+
+.btn-embark-world:hover .embark-arrow {
+  transform: translateX(-5px);
+}
+
+/* ==========================================================================
+   5. CALLIGRAPHIC INK STORY OVERLAY (STAGE 6)
+   ========================================================================== */
+.history-ink-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.history-ink-container.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ink-parchment-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 1040px);
+  height: min(84vh, 620px);
+  background: #17130f;
+  border-radius: 20px;
+  border: 2px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9), 0 0 50px rgba(212, 175, 55, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ink-story-header {
+  padding: 16px 24px;
+  background: rgba(26, 20, 14, 0.9);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ink-story-year {
+  font-family: var(--font-arabic-title);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--saudi-gold);
+}
+
+.ink-story-title {
+  font-family: var(--font-calligraphy);
+  font-size: 22px;
+  color: #faf5ee;
+}
+
+.ink-scrubber-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.ink-pill-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: #ccc;
+  font-family: var(--font-arabic-body);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ink-pill-btn.active {
+  background: var(--saudi-gold);
+  color: #000;
+  font-weight: 700;
+}
+
+.ink-story-canvas-wrap {
+  flex: 1;
+  position: relative;
+  background: #120e0b;
+}
+
+#ink-story-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ink-story-footer {
+  padding: 14px 24px;
+  background: rgba(20, 15, 10, 0.95);
+  border-top: 1px solid rgba(212, 175, 55, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ink-story-narrative {
+  font-size: 14px;
+  color: #e5dfd5;
+  line-height: 1.6;
+  max-width: 75%;
+}
+
+.ink-nav-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ink-btn-nav {
+  background: var(--saudi-green);
+  border: 1px solid var(--saudi-gold);
+  color: #fff;
+  font-family: var(--font-arabic-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ink-btn-nav:hover {
+  background: #008744;
+  box-shadow: 0 0 14px var(--saudi-gold-glow);
+}
+
+/* ==========================================================================
+   6. CITY EXPLORATION & MINI-GAME INTERACTION OVERLAY (STAGE 8 & 9)
+   ========================================================================== */
+.city-world-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.city-world-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.city-hud-header {
+  position: absolute;
+  top: 76px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-back-kingdom {
+  background: var(--hud-bg);
+  border: 1px solid var(--saudi-gold);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #faf5ee;
+  font-family: var(--font-arabic-body);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-back-kingdom:hover {
+  background: var(--saudi-green);
+  box-shadow: 0 0 16px var(--saudi-gold-glow);
+}
+
+.city-info-badge {
+  background: rgba(13, 18, 15, 0.8);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  backdrop-filter: blur(14px);
+  padding: 8px 20px;
+  border-radius: 999px;
+  text-align: center;
+}
+
+.city-badge-name {
+  font-family: var(--font-arabic-title);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--saudi-gold);
+}
+
+.city-badge-tag {
+  font-size: 11px;
+  color: #ccc;
+}
+
+/* Mini Game Interactive Arena Canvas */
+.city-game-viewport {
+  position: absolute;
+  bottom: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 860px);
+  height: min(54vh, 460px);
+  background: rgba(10, 14, 12, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 20px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 30px var(--saudi-green-glow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.city-game-header {
+  padding: 10px 18px;
+  background: rgba(18, 24, 20, 0.95);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.game-title-text {
+  font-family: var(--font-arabic-title);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--saudi-gold);
+}
+
+.game-status-score {
+  font-size: 13px;
+  font-weight: 600;
+  color: #faf5ee;
+  background: rgba(0, 108, 53, 0.5);
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.city-game-canvas-wrap {
+  flex: 1;
+  position: relative;
+}
+
+#city-interactive-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.city-game-controls-bar {
+  padding: 8px 18px;
+  background: rgba(14, 18, 15, 0.95);
+  border-top: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #ccc;
+}
+
+/* ==========================================================================
+   7. RESPONSIVE BREAKPOINTS (MOBILE PERFECTION)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .world-master-hud {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+  
+  .world-stage-tracker {
+    display: none; /* Keep clean on small mobile */
+  }
+
+  .world-bottom-hud {
+    bottom: 16px;
+    width: 94%;
+  }
+
+  .cinematic-caption-box {
+    padding: 10px 16px;
+  }
+
+  .caption-title {
+    font-size: 16px;
+  }
+
+  .caption-body {
+    font-size: 12px;
+  }
+
+  .ink-parchment-frame {
+    width: 95vw;
+    height: 80vh;
+  }
+
+  .ink-story-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .city-game-viewport {
+    bottom: 60px;
+    width: 96vw;
+    height: 52vh;
+  }
+}
