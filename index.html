@@ -4,22 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>عالم السعودية الافتراضي — اليوم الوطني السعودي 96 (2026)</title>
-  <meta name="description" content="عالم افتراضي مصغر للسعودية: رحلة سينمائية ثلاثية الأبعاد متصلة من واحة النخيل والعلم الفيزيائي، إلى مسار النهضة، وريشة التاريخ، وخريطة المملكة وعوالم المدن وألعابها الحية.">
+  <meta name="description" content="عالم رقمي سينمائي تفاعلي يمثل السعودية: بيئة طبيعية ناصعة، علم يرفرف بفيزياء حقيقية، ورحلة متصلة من فجر الوطن إلى عمق أراضيه.">
 
-  <!-- Google Fonts: Arabic Heritage & Modern Typography -->
+  <!-- Google Fonts: Authentic Arabic Heritage & Dignified Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=El+Messiri:wght@400;600;700&family=Reem+Kufi:wght@400;600;700;800&family=Scheherazade+New:wght@400;600;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./css/style.css">
 
   <!-- YouTube IFrame API for background audio streaming without visual players -->
   <script src="https://www.youtube.com/iframe_api"></script>
 </head>
-<body>
+<body class="saudi-digital-world">
 
   <!-- Hidden Official YouTube Audio Streams (Audio Infrastructure) -->
-  <div style="position: absolute; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; overflow: hidden;" aria-hidden="true">
+  <div style="position: absolute; width: 1px; height: 1px; opacity: 0.001; pointer-events: none; overflow: hidden;" aria-hidden="true">
     <div id="yt-anthem"></div>
     <div id="yt-badawi"></div>
     <div id="yt-taif"></div>
@@ -30,52 +30,35 @@
   <!-- 1. MASTER 3D VIRTUAL WORLD VIEWPORT (THREE.JS WEBGL) -->
   <main id="world-viewport" aria-label="عالم السعودية الافتراضي"></main>
 
-  <!-- 2. MINIMALIST TOP HUD -->
-  <header class="world-master-hud">
-    <div class="hud-group">
-      <button class="hud-btn" id="btn-sound-toggle" aria-label="التحكم بالصوت">
-        <div class="sound-wave-icon">
-          <span></span><span></span><span></span>
-        </div>
-        <span id="sound-status-label">صوت الوطن: نشط 🔊</span>
-      </button>
+  <!-- 2. WHISPER-LIGHT TOP HUD (ONLY SOUND & LANGUAGE) -->
+  <header class="master-minimal-hud" aria-label="شريط التحكم المبسط">
+    <button class="hud-pill-btn" id="btn-sound-toggle" aria-label="التحكم بالصوت">
+      <div class="sound-wave-bars">
+        <span></span><span></span><span></span>
+      </div>
+      <span id="sound-status-label">صوت الوطن: نشط 🔊</span>
+    </button>
 
-      <button class="hud-btn" id="btn-lang-toggle" aria-label="تغيير اللغة">
-        <span id="lang-label">English</span>
-      </button>
-    </div>
-
-    <!-- Center Stage Progression Tracker -->
-    <nav class="world-stage-tracker" id="stage-tracker" aria-label="مراحل رحلة الوطن">
-      <button class="stage-dot-btn active" data-stage="0">واحة البداية والعلم 🇸🇦</button>
-      <button class="stage-dot-btn" data-stage="1">طريق النخيل</button>
-      <button class="stage-dot-btn" data-stage="2">مسار النهضة والمعالم</button>
-      <button class="stage-dot-btn" data-stage="3">هضبة المجد الملكية</button>
-      <button class="stage-dot-btn" data-stage="4">ريشة التاريخ</button>
-      <button class="stage-dot-btn" data-stage="5">خريطة المملكة المجسمة</button>
-      <button class="stage-dot-btn" data-stage="6">عوالم المدن والألعاب</button>
-    </nav>
-
-    <div class="hud-group">
-      <button class="hud-btn" id="btn-camera-reset" aria-label="إعادة ضبط زاوية الرؤية">
-        <span>👁️ الكاميرا</span>
-      </button>
-    </div>
+    <button class="hud-pill-btn" id="btn-lang-toggle" aria-label="تغيير اللغة">
+      <span id="lang-label">English</span>
+    </button>
   </header>
 
-  <!-- 3. OPENING WORLD HERO INSCRIPTION (ELEGANTLY INTEGRATED IN 3D SPACE) -->
-  <div class="opening-world-inscription" id="opening-hero-overlay">
-    <div class="year-badge-royal">١٤٤٨ هـ — ٢٠٢٦ م</div>
-    <h1 class="opening-world-title">اليوم الوطني السعودي</h1>
-    <div class="opening-world-number">٩٦</div>
-    <div class="opening-world-slogan">عزّنا بطبعنا</div>
-    <button class="btn-embark-world" id="btn-embark-world">
-      <span>انطلق في رحلة الوطن</span>
-      <span class="embark-arrow">⟵</span>
+  <!-- 3. OPENING CINEMATIC HERO INSCRIPTION (POETIC & UNCLUTTERED) -->
+  <div class="cinematic-opening-hero" id="opening-hero-overlay">
+    <h1 class="hero-main-title">اليوم الوطني</h1>
+    <div class="hero-sub-title">السعودي</div>
+    <div class="hero-identity-lockup">
+      <span class="hero-giant-number">٩٦</span>
+      <span class="hero-motto-slogan">عزّنا بطبعنا</span>
+    </div>
+    <button class="hero-start-btn" id="btn-start-journey" aria-label="ابدأ رحلة الوطن">
+      <span>ابدأ رحلة الوطن 🇸🇦</span>
+      <span class="btn-arrow-icon">⟵</span>
     </button>
   </div>
 
-  <!-- 4. CALLIGRAPHIC INK STORY OVERLAY (STAGE 5: HISTORICAL STORY) -->
+  <!-- 4. CALLIGRAPHIC INK STORY OVERLAY (FOR HISTORICAL PHASE) -->
   <section class="history-ink-container" id="history-ink-overlay" aria-label="القصة التاريخية بريشة التأسيس">
     <div class="ink-parchment-frame">
       <div class="ink-story-header">
@@ -111,7 +94,7 @@
     </div>
   </section>
 
-  <!-- 5. CITY EXPLORATION & MINI-GAME ARENA (STAGE 7: REAL LIVING MINI-WORLDS) -->
+  <!-- 5. CITY EXPLORATION & MINI-GAME ARENA (FOR CITY LIVING PHASE) -->
   <section class="city-world-overlay" id="city-world-overlay" aria-label="عالم المدينة المصغر والنشاط التفاعلي">
     <div class="city-hud-header">
       <button class="btn-back-kingdom" id="btn-back-to-map">
@@ -119,15 +102,15 @@
       </button>
 
       <div class="city-info-badge">
-        <div class="city-badge-name" id="city-active-name">الرياض</div>
-        <div class="city-badge-tag" id="city-active-tag">عاصمة المجد ودرعية التاريخ</div>
+        <div class="city-badge-name" id="city-active-name">الطائف</div>
+        <div class="city-badge-tag" id="city-active-tag">عروس المصايف ومدينة الورد</div>
       </div>
     </div>
 
     <!-- Interactive Living City Activity Arena -->
     <div class="city-game-viewport" id="city-game-box">
       <div class="city-game-header">
-        <span class="game-title-text" id="game-active-title">⚔️ إيقاع طبول وسيوف العرضة النجدية</span>
+        <span class="game-title-text" id="game-active-title">🌸 قطف وتقطير الورد الطائفي</span>
         <span class="game-status-score" id="game-active-score">النقاط: ٠</span>
       </div>
 
@@ -136,22 +119,10 @@
       </div>
 
       <div class="city-game-controls-bar">
-        <span id="game-instruction-tip">انقر مع دقات الطبل والسيوف في توقيت متناغم لرفع راية الفخر!</span>
-        <button class="hud-btn" id="btn-city-action">تفاعل مع الساحة</button>
+        <span id="game-instruction-tip">المس براعم الورد لقطفها ثم اضبط حرارة قدر التقطير النحاسي</span>
       </div>
     </div>
   </section>
-
-  <!-- 6. CINEMATIC BOTTOM HUD & LIVING CAPTION -->
-  <footer class="world-bottom-hud">
-    <div class="cinematic-caption-box" id="cinematic-caption-box">
-      <div class="caption-title" id="caption-title">واحة البداية والعلم الخفاق</div>
-      <div class="caption-body" id="caption-body">أفق الصباح الذهبي ونخيل الوطن يعانق الراية الخضراء خفاقة في سماء العز.</div>
-      <div class="caption-prompt-action" id="caption-prompt-action">
-        <span>انقر في أي مكان أو اسحب الكاميرا لبدء الرحلة</span>
-      </div>
-    </div>
-  </footer>
 
   <!-- Main Modular Web Application Script -->
   <script type="module" src="./js/app.js"></script>

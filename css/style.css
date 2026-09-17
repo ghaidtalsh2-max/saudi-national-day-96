@@ -1,23 +1,20 @@
 /* ==========================================================================
-   SAUDI VIRTUAL WORLD 96 — MASTER STYLESHEET (CINEMATIC HUD & WORLD)
+   SAUDI VIRTUAL WORLD 96 — PURE CINEMATIC STYLESHEET (PHASE 01)
    - Zero bulky cards, zero dashboards, zero clutter
-   - Pure immersive virtual world viewport
-   - Minimalist, high-end Arabic typography & HUD controls
+   - 100% immersive 3D canvas viewport
+   - Noble, minimal Arabic typography directly in world space
    ========================================================================== */
 
 :root {
   --saudi-green: #006c35;
   --saudi-green-deep: #004d25;
-  --saudi-green-glow: rgba(0, 108, 53, 0.45);
   --saudi-gold: #d4af37;
-  --saudi-gold-light: #f3e5ab;
-  --saudi-gold-glow: rgba(212, 175, 55, 0.5);
-  --sand-warm: #d9b37a;
-  --sand-cream: #faf5ee;
-  --hud-bg: rgba(18, 22, 18, 0.65);
-  --hud-border: rgba(212, 175, 55, 0.35);
-  --font-arabic-title: 'Reem Kufi', 'Amiri', 'Tajawal', serif;
-  --font-arabic-body: 'Tajawal', sans-serif;
+  --saudi-gold-light: #f5e4be;
+  --saudi-gold-glow: rgba(212, 175, 55, 0.4);
+  --hud-glass: rgba(14, 18, 15, 0.5);
+  --hud-border: rgba(212, 175, 55, 0.28);
+  --font-title: 'Almarai', 'Amiri', serif;
+  --font-body: 'Almarai', 'Tajawal', sans-serif;
   --font-calligraphy: 'Aref Ruqaa', 'Amiri', serif;
 }
 
@@ -33,14 +30,14 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: #0d120f;
+  background-color: #0b100d;
   color: #faf5ee;
-  font-family: var(--font-arabic-body);
+  font-family: var(--font-body);
   direction: rtl;
 }
 
 /* ==========================================================================
-   1. MASTER 3D VIEWPORT CONTAINER
+   1. MASTER 3D VIEWPORT CANVAS
    ========================================================================== */
 #world-viewport {
   position: absolute;
@@ -60,306 +57,210 @@ html, body {
 }
 
 /* ==========================================================================
-   2. MINIMALIST PERSISTENT HUD (TOP BAR)
+   2. WHISPER-LIGHT TOP HUD (ONLY SOUND & LANGUAGE)
    ========================================================================== */
-.world-master-hud {
+.master-minimal-hud {
   position: absolute;
-  top: 18px;
-  left: 24px;
-  right: 24px;
+  top: 22px;
+  left: 28px;
+  right: 28px;
   z-index: 100;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 14px;
   pointer-events: none;
 }
 
-.hud-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.hud-pill-btn {
   pointer-events: auto;
-}
-
-.hud-btn {
-  background: var(--hud-bg);
+  background: var(--hud-glass);
   border: 1px solid var(--hud-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: #faf5ee;
-  font-family: var(--font-arabic-body);
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 500;
-  padding: 8px 16px;
+  padding: 7px 16px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
 }
 
-.hud-btn:hover {
-  background: rgba(0, 108, 53, 0.75);
+.hud-pill-btn:hover {
+  background: rgba(0, 108, 53, 0.65);
   border-color: var(--saudi-gold);
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px var(--saudi-gold-glow);
+  box-shadow: 0 6px 20px var(--saudi-gold-glow);
 }
 
-.hud-btn:active {
-  transform: translateY(0);
-}
-
-.sound-wave-icon {
+.sound-wave-bars {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 2.5px;
   height: 12px;
 }
 
-.sound-wave-icon span {
+.sound-wave-bars span {
   width: 2px;
   height: 100%;
   background-color: var(--saudi-gold);
   border-radius: 2px;
-  animation: waveBar 1.2s infinite ease-in-out;
+  animation: barPulse 1.2s infinite ease-in-out;
 }
 
-.sound-wave-icon span:nth-child(2) { animation-delay: 0.2s; height: 60%; }
-.sound-wave-icon span:nth-child(3) { animation-delay: 0.4s; height: 80%; }
+.sound-wave-bars span:nth-child(2) { animation-delay: 0.25s; height: 60%; }
+.sound-wave-bars span:nth-child(3) { animation-delay: 0.5s; height: 80%; }
 
-@keyframes waveBar {
+@keyframes barPulse {
   0%, 100% { transform: scaleY(0.3); }
   50% { transform: scaleY(1); }
 }
 
-.sound-muted .sound-wave-icon span {
+.sound-muted .sound-wave-bars span {
   animation: none;
   height: 2px !important;
   background-color: #888;
 }
 
-/* Discrete Center Stage Scrubber */
-.world-stage-tracker {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--hud-bg);
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 6px 14px;
-  border-radius: 999px;
-  pointer-events: auto;
-}
-
-.stage-dot-btn {
-  background: none;
-  border: none;
-  color: rgba(250, 245, 238, 0.6);
-  font-family: var(--font-arabic-body);
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.stage-dot-btn::before {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(250, 245, 238, 0.3);
-  transition: all 0.3s ease;
-}
-
-.stage-dot-btn:hover {
-  color: #fff;
-}
-
-.stage-dot-btn.active {
-  background: var(--saudi-green);
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 0 14px var(--saudi-green-glow);
-}
-
-.stage-dot-btn.active::before {
-  background: var(--saudi-gold);
-  transform: scale(1.4);
-}
-
 /* ==========================================================================
-   3. CINEMATIC SUBTITLE & PROMPT OVERLAY (BOTTOM HUD)
+   3. CINEMATIC HERO INSCRIPTION (POETIC & PURE)
    ========================================================================== */
-.world-bottom-hud {
+.cinematic-opening-hero {
   position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  pointer-events: none;
-  max-width: 800px;
-  width: 90%;
-  text-align: center;
-}
-
-.cinematic-caption-box {
-  background: linear-gradient(180deg, rgba(13, 18, 15, 0.85) 0%, rgba(8, 10, 8, 0.95) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 18px;
-  padding: 12px 28px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 30px rgba(212, 175, 55, 0.1);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: auto;
-}
-
-.caption-title {
-  font-family: var(--font-arabic-title);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--saudi-gold);
-  margin-bottom: 4px;
-  letter-spacing: 0.5px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.caption-body {
-  font-size: 14px;
-  color: #e5dfd5;
-  line-height: 1.5;
-  font-weight: 400;
-}
-
-.caption-prompt-action {
-  margin-top: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--saudi-gold-light);
-  background: rgba(0, 108, 53, 0.4);
-  padding: 5px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  animation: pulseGold 2s infinite ease-in-out;
-}
-
-@keyframes pulseGold {
-  0%, 100% { box-shadow: 0 0 0 rgba(212, 175, 55, 0); }
-  50% { box-shadow: 0 0 16px var(--saudi-gold-glow); }
-}
-
-/* ==========================================================================
-   4. OPENING WORLD HERO INSCRIPTION (FADES OUT ON JOURNEY START)
-   ========================================================================== */
-.opening-world-inscription {
-  position: absolute;
-  top: 50%;
+  top: 74%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 50;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 680px;
   pointer-events: none;
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s ease;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  transition: opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1), transform 2.2s ease;
+  animation: heroEntranceCenter 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.opening-world-inscription.vanished {
-  opacity: 0;
-  transform: translate(-50%, -60%) scale(0.95);
-  pointer-events: none;
+@keyframes heroEntranceCenter {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -42%);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
 
-.year-badge-royal {
-  font-family: var(--font-arabic-body);
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--saudi-gold);
-  letter-spacing: 2px;
-  background: rgba(13, 18, 15, 0.7);
-  border: 1px solid rgba(212, 175, 55, 0.4);
-  padding: 6px 20px;
-  border-radius: 999px;
-  display: inline-block;
-  margin-bottom: 12px;
-  backdrop-filter: blur(10px);
+.cinematic-opening-hero.vanished {
+  opacity: 0 !important;
+  transform: translate(-50%, -60%) !important;
+  pointer-events: none !important;
 }
 
-.opening-world-title {
-  font-family: var(--font-arabic-title);
-  font-size: clamp(34px, 5.5vw, 68px);
+.hero-main-title {
+  font-family: 'Almarai', 'Tajawal', sans-serif;
+  font-size: clamp(38px, 5.0vw, 64px);
   font-weight: 800;
-  color: #faf5ee;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 108, 53, 0.6);
-  line-height: 1.15;
-  margin-bottom: 6px;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  line-height: 1.12;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 24px rgba(0, 108, 53, 0.40));
 }
 
-.opening-world-number {
-  font-family: var(--font-arabic-title);
-  font-size: clamp(48px, 8vw, 110px);
-  font-weight: 900;
-  background: linear-gradient(180deg, #ffffff 0%, var(--saudi-gold-light) 60%, var(--saudi-gold) 100%);
+.hero-sub-title {
+  font-family: 'Almarai', 'Tajawal', sans-serif;
+  font-size: clamp(36px, 4.6vw, 60px);
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  line-height: 1.12;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 24px rgba(0, 108, 53, 0.40));
+}
+
+.hero-identity-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 2px;
+}
+
+.hero-giant-number {
+  font-family: 'Almarai', sans-serif;
+  font-size: clamp(52px, 6.8vw, 92px);
+  font-weight: 800;
+  background: linear-gradient(180deg, #ffffff 0%, #fae8c5 40%, #dfb33e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  filter: drop-shadow(0 5px 18px rgba(0, 0, 0, 0.95));
   line-height: 0.95;
-  margin-bottom: 12px;
+  margin-bottom: 0;
 }
 
-.opening-world-slogan {
-  font-family: var(--font-calligraphy);
-  font-size: clamp(22px, 3.2vw, 38px);
-  color: var(--saudi-gold-light);
-  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.7);
-  margin-bottom: 24px;
-}
-
-.btn-embark-world {
-  pointer-events: auto;
-  background: linear-gradient(135deg, var(--saudi-green) 0%, var(--saudi-green-deep) 100%);
-  border: 1px solid var(--saudi-gold);
-  color: #fff;
-  font-family: var(--font-arabic-body);
-  font-size: 17px;
+.hero-motto-slogan {
+  font-family: 'Aref Ruqaa', 'Amiri', serif;
+  font-size: clamp(28px, 3.8vw, 46px);
   font-weight: 700;
-  padding: 14px 38px;
+  color: #f7dfb0;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.95));
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.hero-start-btn {
+  margin-top: 14px;
+  pointer-events: auto;
+  background: linear-gradient(135deg, rgba(0, 108, 53, 0.88) 0%, rgba(0, 68, 33, 0.95) 100%);
+  border: 1.5px solid var(--saudi-gold);
+  color: #ffffff;
+  font-family: 'Almarai', 'Tajawal', sans-serif;
+  font-size: clamp(13px, 1.3vw, 16px);
+  font-weight: 700;
+  padding: 8px 24px;
   border-radius: 999px;
-  cursor: pointer;
-  box-shadow: 0 8px 32px rgba(0, 108, 53, 0.5), 0 0 20px var(--saudi-gold-glow);
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(212, 175, 55, 0.3);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.btn-embark-world:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 12px 40px rgba(0, 108, 53, 0.8), 0 0 30px var(--saudi-gold);
+.hero-start-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  background: linear-gradient(135deg, rgba(0, 140, 68, 0.95) 0%, rgba(0, 90, 44, 0.98) 100%);
+  border-color: #ffd966;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 28px rgba(212, 175, 55, 0.55);
 }
 
-.btn-embark-world .embark-arrow {
+.hero-start-btn .btn-arrow-icon {
+  font-size: 1.1em;
   transition: transform 0.3s ease;
 }
 
-.btn-embark-world:hover .embark-arrow {
-  transform: translateX(-5px);
+.hero-start-btn:hover .btn-arrow-icon {
+  transform: translateX(-4px);
 }
 
 /* ==========================================================================
-   5. CALLIGRAPHIC INK STORY OVERLAY (STAGE 6)
+   4. CALLIGRAPHIC INK STORY (PRESERVED CLEAN FOR HISTORICAL PHASE)
    ========================================================================== */
 .history-ink-container {
   position: absolute;
@@ -404,7 +305,7 @@ html, body {
 }
 
 .ink-story-year {
-  font-family: var(--font-arabic-title);
+  font-family: var(--font-title);
   font-size: 26px;
   font-weight: 800;
   color: var(--saudi-gold);
@@ -425,7 +326,7 @@ html, body {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(212, 175, 55, 0.25);
   color: #ccc;
-  font-family: var(--font-arabic-body);
+  font-family: var(--font-body);
   font-size: 11px;
   padding: 4px 10px;
   border-radius: 999px;
@@ -476,7 +377,7 @@ html, body {
   background: var(--saudi-green);
   border: 1px solid var(--saudi-gold);
   color: #fff;
-  font-family: var(--font-arabic-body);
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
   padding: 8px 18px;
@@ -491,7 +392,7 @@ html, body {
 }
 
 /* ==========================================================================
-   6. CITY EXPLORATION & MINI-GAME INTERACTION OVERLAY (STAGE 8 & 9)
+   5. CITY EXPLORATION OVERLAY (PRESERVED FOR LATER CITY PHASES)
    ========================================================================== */
 .city-world-overlay {
   position: absolute;
@@ -513,20 +414,19 @@ html, body {
 .city-hud-header {
   position: absolute;
   top: 76px;
-  left: 24px;
-  right: 24px;
+  left: 28px;
+  right: 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .btn-back-kingdom {
-  background: var(--hud-bg);
+  background: var(--hud-glass);
   border: 1px solid var(--saudi-gold);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(16px);
   color: #faf5ee;
-  font-family: var(--font-arabic-body);
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
   padding: 8px 18px;
@@ -553,7 +453,7 @@ html, body {
 }
 
 .city-badge-name {
-  font-family: var(--font-arabic-title);
+  font-family: var(--font-title);
   font-size: 16px;
   font-weight: 800;
   color: var(--saudi-gold);
@@ -564,7 +464,6 @@ html, body {
   color: #ccc;
 }
 
-/* Mini Game Interactive Arena Canvas */
 .city-game-viewport {
   position: absolute;
   bottom: 84px;
@@ -575,7 +474,7 @@ html, body {
   background: rgba(10, 14, 12, 0.88);
   border: 1px solid rgba(212, 175, 55, 0.4);
   border-radius: 20px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 30px var(--saudi-green-glow);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 108, 53, 0.45);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -591,7 +490,7 @@ html, body {
 }
 
 .game-title-text {
-  font-family: var(--font-arabic-title);
+  font-family: var(--font-title);
   font-size: 15px;
   font-weight: 700;
   color: var(--saudi-gold);
@@ -630,50 +529,22 @@ html, body {
 }
 
 /* ==========================================================================
-   7. RESPONSIVE BREAKPOINTS (MOBILE PERFECTION)
+   6. RESPONSIVE PERFECTION
    ========================================================================== */
 @media (max-width: 768px) {
-  .world-master-hud {
-    top: 12px;
-    left: 12px;
-    right: 12px;
-  }
-  
-  .world-stage-tracker {
-    display: none; /* Keep clean on small mobile */
+  .master-minimal-hud {
+    top: 14px;
+    left: 16px;
+    right: 16px;
   }
 
-  .world-bottom-hud {
-    bottom: 16px;
-    width: 94%;
-  }
-
-  .cinematic-caption-box {
-    padding: 10px 16px;
-  }
-
-  .caption-title {
-    font-size: 16px;
-  }
-
-  .caption-body {
+  .hero-year-badge {
     font-size: 12px;
+    padding: 4px 14px;
   }
 
-  .ink-parchment-frame {
-    width: 95vw;
-    height: 80vh;
-  }
-
-  .ink-story-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .city-game-viewport {
-    bottom: 60px;
-    width: 96vw;
-    height: 52vh;
+  .hero-whisper-prompt {
+    font-size: 13px;
+    padding: 10px 22px;
   }
 }
