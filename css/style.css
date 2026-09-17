@@ -1,19 +1,22 @@
 /* ==========================================================================
-   SAUDI VIRTUAL WORLD 96 — PURE CINEMATIC STYLESHEET (PHASE 01)
-   - Zero bulky cards, zero dashboards, zero clutter
+   SAUDI VIRTUAL WORLD 96 — PURE CINEMATIC STYLESHEET
+   - "عزّنا بطبعنا" (اليوم الوطني السعودي 96)
+   - Zero bulky cards, zero generic dashboards
    - 100% immersive 3D canvas viewport
    - Noble, minimal Arabic typography directly in world space
+   - Mobile & laptop responsive perfection
    ========================================================================== */
 
 :root {
   --saudi-green: #006c35;
   --saudi-green-deep: #004d25;
+  --saudi-green-glow: rgba(0, 108, 53, 0.45);
   --saudi-gold: #d4af37;
   --saudi-gold-light: #f5e4be;
   --saudi-gold-glow: rgba(212, 175, 55, 0.4);
-  --hud-glass: rgba(14, 18, 15, 0.5);
-  --hud-border: rgba(212, 175, 55, 0.28);
-  --font-title: 'Almarai', 'Amiri', serif;
+  --hud-glass: rgba(14, 18, 15, 0.65);
+  --hud-border: rgba(212, 175, 55, 0.35);
+  --font-title: 'Almarai', 'Tajawal', sans-serif;
   --font-body: 'Almarai', 'Tajawal', sans-serif;
   --font-calligraphy: 'Aref Ruqaa', 'Amiri', serif;
 }
@@ -57,7 +60,7 @@ html, body {
 }
 
 /* ==========================================================================
-   2. WHISPER-LIGHT TOP HUD (ONLY SOUND & LANGUAGE)
+   2. WHISPER-LIGHT TOP HUD
    ========================================================================== */
 .master-minimal-hud {
   position: absolute;
@@ -68,7 +71,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 14px;
+  gap: 12px;
   pointer-events: none;
 }
 
@@ -81,7 +84,7 @@ html, body {
   color: #faf5ee;
   font-family: var(--font-body);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   padding: 7px 16px;
   border-radius: 999px;
   display: inline-flex;
@@ -93,10 +96,16 @@ html, body {
 }
 
 .hud-pill-btn:hover {
-  background: rgba(0, 108, 53, 0.65);
+  background: rgba(0, 108, 53, 0.75);
   border-color: var(--saudi-gold);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px var(--saudi-gold-glow);
+}
+
+.hub-shortcut-btn {
+  background: linear-gradient(135deg, rgba(0, 108, 53, 0.85) 0%, rgba(0, 68, 33, 0.95) 100%);
+  border-color: var(--saudi-gold);
+  color: #ffffff;
 }
 
 .sound-wave-bars {
@@ -129,7 +138,7 @@ html, body {
 }
 
 /* ==========================================================================
-   3. CINEMATIC HERO INSCRIPTION (POETIC & PURE)
+   3. CINEMATIC HERO INSCRIPTION (SCREEN 01)
    ========================================================================== */
 .cinematic-opening-hero {
   position: absolute;
@@ -143,13 +152,7 @@ html, body {
   align-items: center;
   max-width: 680px;
   pointer-events: none;
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  box-shadow: none !important;
-  transition: opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1), transform 2.2s ease;
+  transition: opacity 2.0s cubic-bezier(0.16, 1, 0.3, 1), transform 2.0s ease;
   animation: heroEntranceCenter 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -171,7 +174,7 @@ html, body {
 }
 
 .hero-main-title {
-  font-family: 'Almarai', 'Tajawal', sans-serif;
+  font-family: var(--font-title);
   font-size: clamp(38px, 5.0vw, 64px);
   font-weight: 800;
   color: #ffffff;
@@ -182,7 +185,7 @@ html, body {
 }
 
 .hero-sub-title {
-  font-family: 'Almarai', 'Tajawal', sans-serif;
+  font-family: var(--font-title);
   font-size: clamp(36px, 4.6vw, 60px);
   font-weight: 800;
   color: #ffffff;
@@ -201,7 +204,7 @@ html, body {
 }
 
 .hero-giant-number {
-  font-family: 'Almarai', sans-serif;
+  font-family: var(--font-title);
   font-size: clamp(52px, 6.8vw, 92px);
   font-weight: 800;
   background: linear-gradient(180deg, #ffffff 0%, #fae8c5 40%, #dfb33e 100%);
@@ -209,29 +212,27 @@ html, body {
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 5px 18px rgba(0, 0, 0, 0.95));
   line-height: 0.95;
-  margin-bottom: 0;
 }
 
 .hero-motto-slogan {
-  font-family: 'Aref Ruqaa', 'Amiri', serif;
+  font-family: var(--font-calligraphy);
   font-size: clamp(28px, 3.8vw, 46px);
   font-weight: 700;
   color: #f7dfb0;
   filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.95));
-  margin-bottom: 0;
   white-space: nowrap;
 }
 
 .hero-start-btn {
   margin-top: 14px;
   pointer-events: auto;
-  background: linear-gradient(135deg, rgba(0, 108, 53, 0.88) 0%, rgba(0, 68, 33, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(0, 108, 53, 0.9) 0%, rgba(0, 68, 33, 0.95) 100%);
   border: 1.5px solid var(--saudi-gold);
   color: #ffffff;
-  font-family: 'Almarai', 'Tajawal', sans-serif;
-  font-size: clamp(13px, 1.3vw, 16px);
+  font-family: var(--font-title);
+  font-size: clamp(14px, 1.3vw, 16px);
   font-weight: 700;
-  padding: 8px 24px;
+  padding: 10px 28px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -260,7 +261,131 @@ html, body {
 }
 
 /* ==========================================================================
-   4. CALLIGRAPHIC INK STORY (PRESERVED CLEAN FOR HISTORICAL PHASE)
+   4. ROAD JOURNEY HUD & MINIMAL SKIP
+   ========================================================================== */
+.road-journey-hud {
+  position: absolute;
+  bottom: 36px;
+  left: 36px;
+  right: 36px;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.road-caption-indicator {
+  background: rgba(14, 18, 15, 0.75);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  backdrop-filter: blur(12px);
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: #f7dfb0;
+}
+
+.btn-skip-road {
+  pointer-events: auto;
+  background: rgba(14, 18, 15, 0.75);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-skip-road:hover {
+  background: var(--saudi-green);
+  border-color: var(--saudi-gold);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   5. ROYAL TRIBUTE OVERLAY (SCREEN 03)
+   ========================================================================== */
+.royal-tribute-overlay {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 640px;
+  width: 90%;
+  pointer-events: none;
+}
+
+.royal-tribute-box {
+  pointer-events: auto;
+  background: rgba(14, 18, 15, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  backdrop-filter: blur(18px);
+  padding: 18px 28px;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.royal-tribute-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--saudi-gold);
+  background: rgba(212, 175, 55, 0.15);
+  padding: 3px 14px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.royal-tribute-title {
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.royal-tribute-quote {
+  font-family: var(--font-calligraphy);
+  font-size: 15px;
+  color: #e5dfd5;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.royal-continue-btn {
+  background: linear-gradient(135deg, var(--saudi-green) 0%, var(--saudi-green-deep) 100%);
+  border: 1px solid var(--saudi-gold);
+  color: #ffffff;
+  font-family: var(--font-title);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 24px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0, 108, 53, 0.4);
+}
+
+.royal-continue-btn:hover {
+  background: #008744;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--saudi-gold-glow);
+}
+
+/* ==========================================================================
+   6. CALLIGRAPHIC INK STORY (SCREEN 04)
    ========================================================================== */
 .history-ink-container {
   position: absolute;
@@ -365,7 +490,7 @@ html, body {
   font-size: 14px;
   color: #e5dfd5;
   line-height: 1.6;
-  max-width: 75%;
+  max-width: 70%;
 }
 
 .ink-nav-actions {
@@ -392,7 +517,621 @@ html, body {
 }
 
 /* ==========================================================================
-   5. CITY EXPLORATION OVERLAY (PRESERVED FOR LATER CITY PHASES)
+   7. EXPLORATION HUB ("وش ودك تكتشف؟" — SCREEN 05)
+   ========================================================================== */
+.exploration-hub-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 65;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  background: radial-gradient(circle at center, rgba(14, 24, 18, 0.6) 0%, rgba(8, 12, 10, 0.9) 100%);
+}
+
+.exploration-hub-container.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hub-center-portal {
+  width: min(94vw, 1080px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.hub-header-lockup {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.hub-badge-pill {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--saudi-gold);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 4px 16px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.hub-main-title {
+  font-family: var(--font-title);
+  font-size: clamp(32px, 4.2vw, 52px);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.8));
+}
+
+.hub-sub-title {
+  font-size: clamp(13px, 1.4vw, 16px);
+  color: #d8cebf;
+}
+
+.hub-portals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.hub-portal-card {
+  background: rgba(18, 26, 21, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  text-align: right;
+  color: #ffffff;
+}
+
+.hub-portal-card:hover {
+  background: rgba(0, 108, 53, 0.55);
+  border-color: var(--saudi-gold);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px var(--saudi-gold-glow);
+}
+
+.portal-highlight {
+  background: linear-gradient(135deg, rgba(0, 108, 53, 0.85) 0%, rgba(20, 36, 26, 0.9) 100%);
+  border: 1.5px solid var(--saudi-gold);
+}
+
+.portal-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.portal-info {
+  flex: 1;
+}
+
+.portal-title {
+  font-family: var(--font-title);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--saudi-gold);
+  margin-bottom: 4px;
+}
+
+.portal-desc {
+  font-size: 12px;
+  color: #d1c8ba;
+  line-height: 1.45;
+}
+
+.portal-action-arrow {
+  font-size: 20px;
+  color: var(--saudi-gold);
+  transition: transform 0.3s ease;
+}
+
+.hub-portal-card:hover .portal-action-arrow {
+  transform: translateX(-6px);
+}
+
+/* ==========================================================================
+   8. EXPERIENCE MODALS (STAMP, DIWAN, LEXICON, ONE HOME)
+   ========================================================================== */
+.experience-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 75;
+  pointer-events: none;
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.7s ease;
+  background: rgba(6, 10, 8, 0.88);
+  backdrop-filter: blur(14px);
+}
+
+.experience-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.experience-modal-frame {
+  width: min(94vw, 1040px);
+  height: min(88vh, 660px);
+  background: rgba(14, 20, 16, 0.95);
+  border: 1.5px solid rgba(212, 175, 55, 0.45);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(0, 108, 53, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-top-bar {
+  padding: 14px 22px;
+  background: rgba(22, 30, 25, 0.98);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-modal-back {
+  background: rgba(0, 108, 53, 0.4);
+  border: 1px solid var(--saudi-gold);
+  color: #faf5ee;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-modal-back:hover {
+  background: var(--saudi-green);
+  box-shadow: 0 0 14px var(--saudi-gold-glow);
+}
+
+.modal-title-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.modal-main-heading {
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--saudi-gold);
+}
+
+.modal-sub-heading {
+  font-size: 11px;
+  color: #b5ac9d;
+}
+
+/* 8.1 "سعوديتك" STAMP CREATOR STYLES */
+.stamp-creator-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 20px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.stamp-controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-group-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group-item label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--saudi-gold-light);
+}
+
+.form-group-item input,
+.form-group-item textarea {
+  background: rgba(22, 30, 24, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-group-item input:focus,
+.form-group-item textarea:focus {
+  border-color: var(--saudi-gold);
+}
+
+.quick-tags-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tags-label {
+  font-size: 11px;
+  color: #ccc;
+}
+
+.tags-pills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stamp-tag-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: #e5dfd5;
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stamp-tag-btn:hover,
+.stamp-tag-btn.active {
+  background: var(--saudi-green);
+  border-color: var(--saudi-gold);
+  color: #fff;
+}
+
+.btn-generate-stamp {
+  background: linear-gradient(135deg, var(--saudi-green) 0%, var(--saudi-green-deep) 100%);
+  border: 1.5px solid var(--saudi-gold);
+  color: #ffffff;
+  font-family: var(--font-title);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px var(--saudi-green-glow);
+  margin-top: 4px;
+}
+
+.btn-generate-stamp:hover {
+  background: #008744;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--saudi-gold-glow);
+}
+
+.stamp-preview-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.stamp-canvas-container {
+  width: 100%;
+  max-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 12, 10, 0.6);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+#postal-stamp-canvas {
+  max-width: 100%;
+  max-height: 380px;
+  display: block;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+}
+
+.stamp-actions-bar {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.stamp-action-btn {
+  flex: 1;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid var(--saudi-gold);
+}
+
+.stamp-action-btn.primary {
+  background: var(--saudi-green);
+  color: #fff;
+}
+
+.stamp-action-btn.secondary {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--saudi-gold);
+}
+
+.stamp-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--saudi-gold-glow);
+}
+
+/* 8.2 "ديواننا" DIWAN POETRY STYLES */
+.diwan-body-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  overflow: hidden;
+}
+
+.diwan-regions-nav {
+  background: rgba(18, 24, 20, 0.85);
+  border-left: 1px solid rgba(212, 175, 55, 0.25);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.diwan-reg-btn {
+  background: transparent;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: #d1c8ba;
+  font-family: var(--font-body);
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: right;
+  transition: all 0.25s ease;
+}
+
+.diwan-reg-btn:hover,
+.diwan-reg-btn.active {
+  background: var(--saudi-green);
+  border-color: var(--saudi-gold);
+  color: #fff;
+  font-weight: 700;
+}
+
+.diwan-content-area {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.diwan-poem-card {
+  max-width: 620px;
+  width: 100%;
+  text-align: center;
+}
+
+.poem-title {
+  font-family: var(--font-title);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--saudi-gold);
+  margin-bottom: 4px;
+}
+
+.poem-poet {
+  font-family: var(--font-calligraphy);
+  font-size: 15px;
+  color: #b5ac9d;
+  margin-bottom: 20px;
+}
+
+.poem-verses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.diwan-verse-line {
+  font-family: var(--font-calligraphy);
+  font-size: 19px;
+  line-height: 1.7;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 8px 16px;
+  border-radius: 12px;
+  border-right: 3px solid var(--saudi-gold);
+}
+
+.diwan-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-poem-listen {
+  background: var(--saudi-green);
+  border: 1px solid var(--saudi-gold);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-poem-listen:hover {
+  background: #008744;
+  box-shadow: 0 0 14px var(--saudi-gold-glow);
+}
+
+/* 8.3 "من لساننا" LEXICON STYLES */
+.lexicon-filters-bar {
+  padding: 12px 22px;
+  background: rgba(18, 24, 20, 0.7);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lexicon-filter-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: #d1c8ba;
+  font-family: var(--font-body);
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lexicon-filter-btn.active,
+.lexicon-filter-btn:hover {
+  background: var(--saudi-green);
+  border-color: var(--saudi-gold);
+  color: #fff;
+}
+
+.lexicon-grid-wrap {
+  flex: 1;
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.wall-word-item {
+  background: rgba(22, 30, 25, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-phrase {
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--saudi-gold);
+}
+
+.card-meaning {
+  font-size: 12px;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+.card-region-tag {
+  font-size: 10px;
+  color: #9da89f;
+  margin-top: 4px;
+}
+
+/* 8.4 "السعودية بيت واحد" ONE HOME STYLES */
+.onehome-body-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.onehome-tabs-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.onehome-tab {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  color: #d1c8ba;
+  font-family: var(--font-body);
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.onehome-tab.active,
+.onehome-tab:hover {
+  background: var(--saudi-green);
+  border-color: var(--saudi-gold);
+  color: #fff;
+  font-weight: 700;
+}
+
+.onehome-display-box {
+  max-width: 640px;
+  text-align: center;
+  background: rgba(22, 30, 25, 0.6);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 28px;
+  border-radius: 20px;
+}
+
+.majlis-quote {
+  font-family: var(--font-calligraphy);
+  font-size: 22px;
+  line-height: 1.7;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.majlis-context {
+  font-size: 13px;
+  color: var(--saudi-gold);
+}
+
+/* ==========================================================================
+   9. CITY EXPLORATION OVERLAY & GAMES (SCREEN 08)
    ========================================================================== */
 .city-world-overlay {
   position: absolute;
@@ -444,7 +1183,7 @@ html, body {
 }
 
 .city-info-badge {
-  background: rgba(13, 18, 15, 0.8);
+  background: rgba(13, 18, 15, 0.85);
   border: 1px solid rgba(212, 175, 55, 0.3);
   backdrop-filter: blur(14px);
   padding: 8px 20px;
@@ -529,7 +1268,7 @@ html, body {
 }
 
 /* ==========================================================================
-   6. RESPONSIVE PERFECTION
+   10. RESPONSIVE PERFECTION (MOBILE & LAPTOP)
    ========================================================================== */
 @media (max-width: 768px) {
   .master-minimal-hud {
@@ -538,13 +1277,27 @@ html, body {
     right: 16px;
   }
 
-  .hero-year-badge {
-    font-size: 12px;
-    padding: 4px 14px;
+  .stamp-creator-body {
+    grid-template-columns: 1fr;
   }
 
-  .hero-whisper-prompt {
-    font-size: 13px;
-    padding: 10px 22px;
+  .diwan-body-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .diwan-regions-nav {
+    flex-direction: row;
+    border-left: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  .hub-portals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .city-hud-header {
+    top: 60px;
+    left: 16px;
+    right: 16px;
   }
 }

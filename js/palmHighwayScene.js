@@ -10,22 +10,21 @@
 import * as THREE from 'three';
 
 export class PalmHighwayScene {
-  constructor(scene) {
+  constructor(scene, onComplete) {
     this.scene = scene;
+    this.onComplete = onComplete;
     this.group = new THREE.Group();
 
-    this.speed = 22.0; // Highway cruising velocity
+    this.speed = 24.0; // Highway cruising velocity
     this.roadOffset = 0;
     this.journeyDistance = 0;
+    this.completed = false;
 
     this.roadMesh = null;
     this.palmsLeft = [];
     this.palmsRight = [];
     this.landmarks = [];
     this.petals = null;
-
-    this.transitionProgress = 0; // 0 (Desert trail) to 1 (Asphalt highway)
-    this.architecturalPhase = 0; // 0 (Heritage) -> 1 (Development) -> 2 (Modern Mega City)
 
     this.initRoad();
     this.initPalmCorridors();
@@ -36,9 +35,21 @@ export class PalmHighwayScene {
     this.group.visible = false;
   }
 
+  reset() {
+    this.journeyDistance = 0;
+    this.completed = false;
+    if (this.heritageGroup) {
+      this.heritageGroup.position.set(0, -2.4, -60);
+      this.heritageGroup.visible = true;
+    }
+    if (this.modernHorizonGroup) {
+      this.modernHorizonGroup.position.set(0, -2.4, -145);
+    }
+  }
+
   initRoad() {
-    // 1. Asphalt Highway Plane (width: 14, length: 180)
-    const roadLength = 180;
+    // 1. Asphalt Highway Plane (width: 14, length: 220)
+    const roadLength = 220;
     const roadWidth = 14;
     const roadGeo = new THREE.PlaneGeometry(roadWidth, roadLength, 1, 60);
 
@@ -69,10 +80,19 @@ export class PalmHighwayScene {
       ctx.fillRect(251, y + 20, 10, 88);
     }
 
+    // Road Studs (عيون القطط)
+    ctx.fillStyle = '#ffd700';
+    for (let y = 0; y < 1024; y += 64) {
+      ctx.beginPath();
+      ctx.arc(36 + 5, y + 10, 3, 0, Math.PI * 2);
+      ctx.arc(512 - 46 + 5, y + 10, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     this.roadTexture = new THREE.CanvasTexture(roadCanvas);
     this.roadTexture.wrapS = THREE.RepeatWrapping;
     this.roadTexture.wrapT = THREE.RepeatWrapping;
-    this.roadTexture.repeat.set(1, 14);
+    this.roadTexture.repeat.set(1, 16);
 
     const roadMat = new THREE.MeshStandardMaterial({
       map: this.roadTexture,
@@ -87,7 +107,7 @@ export class PalmHighwayScene {
     this.group.add(this.roadMesh);
 
     // 2. Road Shoulders / Desert Sands
-    const sandGeo = new THREE.PlaneGeometry(80, roadLength, 1, 20);
+    const sandGeo = new THREE.PlaneGeometry(90, roadLength, 1, 20);
     const sandMat = new THREE.MeshStandardMaterial({
       color: 0xd9b37a,
       roughness: 0.95
@@ -95,20 +115,20 @@ export class PalmHighwayScene {
 
     const leftSand = new THREE.Mesh(sandGeo, sandMat);
     leftSand.rotation.x = -Math.PI / 2;
-    leftSand.position.set(-47, -2.38, -50);
+    leftSand.position.set(-52, -2.38, -50);
     leftSand.receiveShadow = true;
     this.group.add(leftSand);
 
     const rightSand = new THREE.Mesh(sandGeo, sandMat);
     rightSand.rotation.x = -Math.PI / 2;
-    rightSand.position.set(47, -2.38, -50);
+    rightSand.position.set(52, -2.38, -50);
     rightSand.receiveShadow = true;
     this.group.add(rightSand);
   }
 
   initPalmCorridors() {
     // Two dense parallel lines of Saudi Date Palms rushing past
-    const countPerSide = 18;
+    const countPerSide = 22;
     const spacing = 9.5;
 
     for (let i = 0; i < countPerSide; i++) {
@@ -116,13 +136,13 @@ export class PalmHighwayScene {
 
       // Left Palm
       const palmL = this.createPalmMesh();
-      palmL.position.set(-10 - Math.random() * 2.5, -2.4, zPos);
+      palmL.position.set(-10 - Math.random() * 3.0, -2.4, zPos);
       this.group.add(palmL);
       this.palmsLeft.push(palmL);
 
       // Right Palm
       const palmR = this.createPalmMesh();
-      palmR.position.set(10 + Math.random() * 2.5, -2.4, zPos);
+      palmR.position.set(10 + Math.random() * 3.0, -2.4, zPos);
       this.group.add(palmR);
       this.palmsRight.push(palmR);
     }
@@ -130,10 +150,10 @@ export class PalmHighwayScene {
 
   createPalmMesh() {
     const palm = new THREE.Group();
-    const h = 6.2 + Math.random() * 1.5;
+    const h = 6.4 + Math.random() * 1.8;
 
     // Trunk
-    const trunkGeo = new THREE.CylinderGeometry(0.22, 0.38, h, 10);
+    const trunkGeo = new THREE.CylinderGeometry(0.22, 0.40, h, 10);
     const trunkMat = new THREE.MeshStandardMaterial({
       color: 0x614833,
       roughness: 0.95
@@ -154,11 +174,11 @@ export class PalmHighwayScene {
 
     for (let f = 0; f < 12; f++) {
       const ang = (f / 12) * Math.PI * 2;
-      const frondGeo = new THREE.PlaneGeometry(0.7, 3.2, 4, 6);
+      const frondGeo = new THREE.PlaneGeometry(0.7, 3.4, 4, 6);
       const pos = frondGeo.attributes.position;
       for (let j = 0; j < pos.count; j++) {
         const y = pos.getY(j);
-        pos.setZ(j, Math.pow(Math.max(0, (y + 1.6) / 3.2), 2) * 1.1);
+        pos.setZ(j, Math.pow(Math.max(0, (y + 1.7) / 3.4), 2) * 1.15);
       }
       frondGeo.computeVertexNormals();
 
@@ -194,9 +214,8 @@ export class PalmHighwayScene {
 
     // 2. Modern Saudi Horizon Group (Kingdom Centre, Al Faisaliah, KAFD Skyscrapers)
     this.modernHorizonGroup = new THREE.Group();
-    this.modernHorizonGroup.position.set(0, -2.4, -135);
+    this.modernHorizonGroup.position.set(0, -2.4, -145);
 
-    // Glass & metallic reflective materials
     const glassMat = new THREE.MeshStandardMaterial({
       color: 0x4a7c9d,
       roughness: 0.2,
@@ -209,34 +228,34 @@ export class PalmHighwayScene {
       metalness: 0.9
     });
 
-    // Kingdom Centre Tower with signature inverted parabolic arch
+    // Kingdom Centre Tower
     const kingdomTower = new THREE.Group();
-    kingdomTower.position.set(-14, 0, 0);
-    const kLeft = new THREE.Mesh(new THREE.BoxGeometry(2.2, 38, 3.5), glassMat);
-    kLeft.position.set(-2.2, 19, 0);
-    const kRight = new THREE.Mesh(new THREE.BoxGeometry(2.2, 38, 3.5), glassMat);
-    kRight.position.set(2.2, 19, 0);
-    const kBridge = new THREE.Mesh(new THREE.BoxGeometry(6.6, 2.8, 3.5), glassMat);
-    kBridge.position.set(0, 36.6, 0);
+    kingdomTower.position.set(-16, 0, 0);
+    const kLeft = new THREE.Mesh(new THREE.BoxGeometry(2.4, 42, 3.5), glassMat);
+    kLeft.position.set(-2.4, 21, 0);
+    const kRight = new THREE.Mesh(new THREE.BoxGeometry(2.4, 42, 3.5), glassMat);
+    kRight.position.set(2.4, 21, 0);
+    const kBridge = new THREE.Mesh(new THREE.BoxGeometry(7.2, 3.2, 3.5), glassMat);
+    kBridge.position.set(0, 40.5, 0);
     kingdomTower.add(kLeft, kRight, kBridge);
     this.modernHorizonGroup.add(kingdomTower);
 
     // Al Faisaliah Tower with golden sphere
     const faisaliahTower = new THREE.Group();
-    faisaliahTower.position.set(16, 0, 5);
-    const fPyramid = new THREE.Mesh(new THREE.ConeGeometry(4.2, 32, 4), glassMat);
-    fPyramid.position.set(0, 16, 0);
+    faisaliahTower.position.set(18, 0, 5);
+    const fPyramid = new THREE.Mesh(new THREE.ConeGeometry(4.6, 36, 4), glassMat);
+    fPyramid.position.set(0, 18, 0);
     faisaliahTower.add(fPyramid);
-    const fSphere = new THREE.Mesh(new THREE.SphereGeometry(1.6, 24, 24), goldMat);
-    fSphere.position.set(0, 26, 0);
+    const fSphere = new THREE.Mesh(new THREE.SphereGeometry(1.8, 24, 24), goldMat);
+    fSphere.position.set(0, 29, 0);
     faisaliahTower.add(fSphere);
     this.modernHorizonGroup.add(faisaliahTower);
 
-    // KAFD Crystal Towers (King Abdullah Financial District)
-    for (let k = 0; k < 7; k++) {
-      const kafdGeo = new THREE.CylinderGeometry(1.8, 2.8, 22 + Math.random() * 16, 6);
+    // KAFD Towers
+    for (let k = 0; k < 8; k++) {
+      const kafdGeo = new THREE.CylinderGeometry(2.0, 3.0, 24 + Math.random() * 18, 6);
       const kafdMesh = new THREE.Mesh(kafdGeo, glassMat);
-      kafdMesh.position.set(-30 + k * 9, 14 + Math.random() * 6, -15 - Math.random() * 12);
+      kafdMesh.position.set(-35 + k * 10, 16 + Math.random() * 6, -15 - Math.random() * 14);
       this.modernHorizonGroup.add(kafdMesh);
     }
 
@@ -244,23 +263,23 @@ export class PalmHighwayScene {
   }
 
   initWindPetals() {
-    // 90 Rose & Lavender swirling particles in vehicle wake
-    const count = 90;
+    // 100 Rose & Lavender swirling particles in vehicle wake
+    const count = 100;
     const geo = new THREE.BufferGeometry();
     const pos = new Float32Array(count * 3);
 
     for (let i = 0; i < count * 3; i += 3) {
-      pos[i] = (Math.random() - 0.5) * 12;
+      pos[i] = (Math.random() - 0.5) * 14;
       pos[i + 1] = Math.random() * 3.5 - 1.5;
-      pos[i + 2] = -Math.random() * 50;
+      pos[i + 2] = -Math.random() * 60;
     }
     geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
 
     const mat = new THREE.PointsMaterial({
-      color: 0xdf4a78, // Taif Rose Petal Pink & Lavender
-      size: 0.14,
+      color: 0xdf4a78, // Taif Rose Petal Pink
+      size: 0.16,
       transparent: true,
-      opacity: 0.8
+      opacity: 0.85
     });
 
     this.petals = new THREE.Points(geo, mat);
@@ -280,8 +299,8 @@ export class PalmHighwayScene {
     }
 
     // Recycle palms continuously as they fly past behind the camera
-    const maxZ = 12;
-    const minZ = -160;
+    const maxZ = 14;
+    const minZ = -190;
     const loopSpan = maxZ - minZ;
 
     const shiftPalms = (arr) => {
@@ -299,26 +318,33 @@ export class PalmHighwayScene {
     shiftPalms(this.palmsRight);
 
     // Architectural Progression (Heritage -> Modern Skyline)
-    // As journey progresses, heritage moves back and modern towers draw closer
-    if (this.journeyDistance < 80) {
-      this.heritageGroup.position.z += distDelta * 0.4;
-      this.modernHorizonGroup.position.z = -140 + this.journeyDistance * 0.4;
+    if (this.journeyDistance < 90) {
+      this.heritageGroup.position.z += distDelta * 0.45;
+      this.modernHorizonGroup.position.z = -145 + this.journeyDistance * 0.35;
     } else {
       this.heritageGroup.visible = false;
-      this.modernHorizonGroup.position.z = Math.min(-35, -140 + this.journeyDistance * 0.5);
+      this.modernHorizonGroup.position.z = Math.min(-35, -145 + this.journeyDistance * 0.45);
+    }
+
+    // Auto-complete road journey when arriving at destination
+    if (this.journeyDistance > 240 && !this.completed) {
+      this.completed = true;
+      if (this.onComplete) {
+        this.onComplete();
+      }
     }
 
     // Petals flight turbulence
     if (this.petals) {
       const pPos = this.petals.geometry.attributes.position;
       for (let i = 0; i < pPos.count; i++) {
-        let z = pPos.getZ(i) + distDelta * 1.4;
+        let z = pPos.getZ(i) + distDelta * 1.5;
         let x = pPos.getX(i) + Math.sin(time * 4 + i) * 0.04;
         let y = pPos.getY(i) + Math.cos(time * 3 + i) * 0.02;
 
-        if (z > 5) {
-          z = -55;
-          x = (Math.random() - 0.5) * 12;
+        if (z > 6) {
+          z = -65;
+          x = (Math.random() - 0.5) * 14;
           y = Math.random() * 3.5 - 1.5;
         }
         pPos.setZ(i, z);

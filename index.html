@@ -30,7 +30,7 @@
   <!-- 1. MASTER 3D VIRTUAL WORLD VIEWPORT (THREE.JS WEBGL) -->
   <main id="world-viewport" aria-label="عالم السعودية الافتراضي"></main>
 
-  <!-- 2. WHISPER-LIGHT TOP HUD (ONLY SOUND & LANGUAGE) -->
+  <!-- 2. WHISPER-LIGHT TOP HUD (ONLY SOUND, LANGUAGE & HUB RETURN) -->
   <header class="master-minimal-hud" aria-label="شريط التحكم المبسط">
     <button class="hud-pill-btn" id="btn-sound-toggle" aria-label="التحكم بالصوت">
       <div class="sound-wave-bars">
@@ -41,6 +41,10 @@
 
     <button class="hud-pill-btn" id="btn-lang-toggle" aria-label="تغيير اللغة">
       <span id="lang-label">English</span>
+    </button>
+
+    <button class="hud-pill-btn hub-shortcut-btn" id="btn-quick-hub" style="display: none;" aria-label="العودة لمساحة الاستكشاف">
+      <span>مساحة الاستكشاف 🧭</span>
     </button>
   </header>
 
@@ -58,7 +62,29 @@
     </button>
   </div>
 
-  <!-- 4. CALLIGRAPHIC INK STORY OVERLAY (FOR HISTORICAL PHASE) -->
+  <!-- 4. ROAD JOURNEY MINIMAL SKIP ACTION -->
+  <div class="road-journey-hud" id="road-journey-hud" style="display: none;">
+    <div class="road-caption-indicator">
+      <span class="road-caption-text">رحلة عبر الزمان: من عبق الماضي إلى شموخ الحاضر</span>
+    </div>
+    <button class="btn-skip-road" id="btn-skip-road">
+      <span>تخطي الرحلة ⟶</span>
+    </button>
+  </div>
+
+  <!-- 5. ROYAL MEMORIAL TRIBUTE OVERLAY -->
+  <div class="royal-tribute-overlay" id="royal-tribute-overlay" style="display: none;">
+    <div class="royal-tribute-box">
+      <div class="royal-tribute-badge">وقار ومجد القيادة</div>
+      <h2 class="royal-tribute-title">مسيرة عز وتوحيد.. ونماء يباهي الأمم</h2>
+      <p class="royal-tribute-quote">«بلادنا مهبط الوحي وقبلة المسلمين، ودستورها كتاب الله وسنة رسوله»</p>
+      <button class="royal-continue-btn" id="btn-royal-continue">
+        <span>متابعة مسيرة التاريخ ⟵</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 6. CALLIGRAPHIC INK STORY OVERLAY (HISTORICAL FILM) -->
   <section class="history-ink-container" id="history-ink-overlay" aria-label="القصة التاريخية بريشة التأسيس">
     <div class="ink-parchment-frame">
       <div class="ink-story-header">
@@ -88,13 +114,238 @@
         <div class="ink-nav-actions">
           <button class="ink-btn-nav" id="btn-ink-prev">السابق</button>
           <button class="ink-btn-nav" id="btn-ink-next">المحطة التالية ⟵</button>
-          <button class="ink-btn-nav" id="btn-ink-to-map" style="display: none;">التحول لخريطة المملكة 🗺️</button>
+          <button class="ink-btn-nav" id="btn-ink-to-hub" style="display: none;">انتقل إلى مساحة الاستكشاف 🧭</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 5. CITY EXPLORATION & MINI-GAME ARENA (FOR CITY LIVING PHASE) -->
+  <!-- 7. EXPLORATION HUB ("وش ودك تكتشف؟") — SPATIAL CROSSROADS PORTAL -->
+  <section class="exploration-hub-container" id="exploration-hub-overlay" aria-label="مساحة الاستكشاف والتفاعل">
+    <div class="hub-center-portal">
+      <div class="hub-header-lockup">
+        <div class="hub-badge-pill">اليوم الوطني السعودي 96</div>
+        <h2 class="hub-main-title">وش ودك تكتشف؟</h2>
+        <p class="hub-sub-title">اختر بوابتك لاستكشاف ثراء وتنوع وأصالة المملكة</p>
+      </div>
+
+      <div class="hub-portals-grid">
+        <!-- Portal 1: Cities 3D Map -->
+        <button class="hub-portal-card" id="portal-cities" data-stage="cities">
+          <div class="portal-icon">🗺️</div>
+          <div class="portal-info">
+            <h3 class="portal-title">المدن</h3>
+            <p class="portal-desc">خريطة المملكة ثلاثية الأبعاد والغوص في عوالم الرياض، الطائف، جدة، والعلا</p>
+          </div>
+          <span class="portal-action-arrow">⟵</span>
+        </button>
+
+        <!-- Portal 2: Diwan Poetry -->
+        <button class="hub-portal-card" id="portal-diwan" data-stage="diwan">
+          <div class="portal-icon">📜</div>
+          <div class="portal-info">
+            <h3 class="portal-title">ديواننا / قصايد</h3>
+            <p class="portal-desc">مجلس الشعر والقصائد التراثية والنبطية الموثقة بأصوات وإلقاء شعراء الوطن</p>
+          </div>
+          <span class="portal-action-arrow">⟵</span>
+        </button>
+
+        <!-- Portal 3: Regional Lexicon -->
+        <button class="hub-portal-card" id="portal-lexicon" data-stage="lexicon">
+          <div class="portal-icon">🗣️</div>
+          <div class="portal-info">
+            <h3 class="portal-title">من لساننا</h3>
+            <p class="portal-desc">الكلمات والعبارات السعودية المتداولة وسياقاتها في نجد والحجاز والجنوب والشمال والشرقية</p>
+          </div>
+          <span class="portal-action-arrow">⟵</span>
+        </button>
+
+        <!-- Portal 4: One Home Unity -->
+        <button class="hub-portal-card" id="portal-onehome" data-stage="onehome">
+          <div class="portal-icon">🏡</div>
+          <div class="portal-info">
+            <h3 class="portal-title">السعودية بيت واحد</h3>
+            <p class="portal-desc">المشتركات الوجدانية: كرم المجلس، سنع القهوة، وصباحات العيد في البيت السعودي</p>
+          </div>
+          <span class="portal-action-arrow">⟵</span>
+        </button>
+
+        <!-- Portal 5: Personalized Stamp Maker ("سعوديتك") -->
+        <button class="hub-portal-card portal-highlight" id="portal-stamp" data-stage="stamp">
+          <div class="portal-icon">📮</div>
+          <div class="portal-info">
+            <h3 class="portal-title">سعوديتك</h3>
+            <p class="portal-desc">اصنع طابع البريد التذكاري الذي يمثل سعوديتك واطبع نسختك المخصصة باسمك</p>
+          </div>
+          <span class="portal-action-arrow">⟵</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. "سعوديتك" — PERSONALIZED POSTAL STAMP MAKER MODAL -->
+  <section class="experience-modal-overlay" id="paint-saudi-overlay" aria-label="صانع طابع البريد التذكاري">
+    <div class="experience-modal-frame stamp-maker-frame">
+      <div class="modal-top-bar">
+        <button class="btn-modal-back" data-back="hub">
+          <span>⟵ العودة إلى مساحة الاستكشاف</span>
+        </button>
+        <div class="modal-title-lockup">
+          <span class="modal-main-heading">📮 سعوديتك — طابع بريد تذكاري رسمي</span>
+          <span class="modal-sub-heading">اكتب أو اختر ما يمثل روح سعوديتك ليتم توليده في طابع يحمل اسمك</span>
+        </div>
+      </div>
+
+      <div class="stamp-creator-body">
+        <div class="stamp-controls-panel">
+          <div class="form-group-item">
+            <label for="stamp-user-name">اسمك الكريم:</label>
+            <input type="text" id="stamp-user-name" placeholder="اكتب اسمك ليظهر على الطابع.." maxlength="40">
+          </div>
+
+          <div class="form-group-item">
+            <label for="stamp-vision-text">كيف تتخيل أو تشعر بسعوديتك؟</label>
+            <textarea id="stamp-vision-text" rows="3" placeholder="مثال: سعوديتي طائف باردة، فيها الجبال والضباب والورد وبيت قديم وقهوة مع أهلي.."></textarea>
+          </div>
+
+          <div class="quick-tags-section">
+            <span class="tags-label">عناصر مقترحة للإلهام (اضغط لإضافتها):</span>
+            <div class="tags-pills-wrap">
+              <button class="stamp-tag-btn" data-tag="طائف وضباب">🌸 الطائف وضباب الهدا</button>
+              <button class="stamp-tag-btn" data-tag="جبال طويق ونخيل">⛰️ جبال طويق ونخيل نجد</button>
+              <button class="stamp-tag-btn" data-tag="رواشين البلد وبحر جدة">🪟 رواشين البلد وبحر جدة</button>
+              <button class="stamp-tag-btn" data-tag="مرايا العلا وصخور الحجر">🪞 مرايا العلا ومدائن صالح</button>
+              <button class="stamp-tag-btn" data-tag="دلة وقهوة سعودية">☕ دلة قهوة وتمر خلاص</button>
+              <button class="stamp-tag-btn" data-tag="خيل عربي وصقر">🦅 خيل عربي أصيل وصقر</button>
+              <button class="stamp-tag-btn" data-tag="أبراج الرياض وكافد">🏙️ أبراج الرياض ومستقبل 2026</button>
+              <button class="stamp-tag-btn" data-tag="سروات عسير ورجال ألمع">🌲 قمم السروات ورجال ألمع</button>
+            </div>
+          </div>
+
+          <button class="btn-generate-stamp" id="btn-generate-stamp">
+            <span>✨ توليد طابع البريد التذكاري 🇸🇦</span>
+          </button>
+        </div>
+
+        <div class="stamp-preview-panel">
+          <div class="stamp-canvas-container" id="stamp-canvas-wrap">
+            <canvas id="postal-stamp-canvas"></canvas>
+          </div>
+          <div class="stamp-actions-bar">
+            <button class="stamp-action-btn primary" id="btn-download-stamp">
+              <span>💾 حفظ الطابع (صورة عالية الدقة PNG)</span>
+            </button>
+            <button class="stamp-action-btn secondary" id="btn-print-stamp">
+              <span>🖨️ طباعة الطابع</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. "ديواننا / قصايد" — POETRY MAJLIS MODAL -->
+  <section class="experience-modal-overlay" id="diwan-overlay" aria-label="مجلس ديواننا للشعر">
+    <div class="experience-modal-frame diwan-frame">
+      <div class="modal-top-bar">
+        <button class="btn-modal-back" data-back="hub">
+          <span>⟵ العودة إلى مساحة الاستكشاف</span>
+        </button>
+        <div class="modal-title-lockup">
+          <span class="modal-main-heading">📜 ديواننا — مجلس الشعر والقصائد السعودية</span>
+          <span class="modal-sub-heading">عيون الشعر الموثق والمسند بحسب مناطق وقبائل المملكة</span>
+        </div>
+      </div>
+
+      <div class="diwan-body-layout">
+        <aside class="diwan-regions-nav">
+          <button class="diwan-reg-btn active" data-region="riyadh">الرياض ونجد</button>
+          <button class="diwan-reg-btn" data-region="taif">الطائف وغيم الهدا</button>
+          <button class="diwan-reg-btn" data-region="jeddah">جدة ومكة والحجاز</button>
+          <button class="diwan-reg-btn" data-region="hail">حائل وعروس الشمال</button>
+          <button class="diwan-reg-btn" data-region="eastern">الشرقية وبحر اللؤلؤ</button>
+          <button class="diwan-reg-btn" data-region="ahsa">الأحساء وواحة النخيل</button>
+          <button class="diwan-reg-btn" data-region="asir">عسير وقمم السروات</button>
+        </aside>
+
+        <main class="diwan-content-area">
+          <div class="diwan-poem-card">
+            <h3 class="poem-title" id="diwan-poem-title">نجد العذية وعرين الملوك</h3>
+            <div class="poem-poet" id="diwan-poet-name">الشاعر محمد بن عثيمين</div>
+            <div class="poem-verses-list" id="diwan-verses-box"></div>
+            <div class="diwan-actions">
+              <button class="btn-poem-listen" id="btn-diwan-listen">
+                <span>🎧 الاستماع للإلقاء التراثي</span>
+              </button>
+              <span class="diwan-audio-status" id="diwan-audio-status" style="display: none;"></span>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. "من لساننا" — REGIONAL LEXICON MODAL -->
+  <section class="experience-modal-overlay" id="lexicon-overlay" aria-label="معجم من لساننا">
+    <div class="experience-modal-frame lexicon-frame">
+      <div class="modal-top-bar">
+        <button class="btn-modal-back" data-back="hub">
+          <span>⟵ العودة إلى مساحة الاستكشاف</span>
+        </button>
+        <div class="modal-title-lockup">
+          <span class="modal-main-heading">🗣️ من لساننا — عبارات ولهجات الوطن</span>
+          <span class="modal-sub-heading">الكلمات والتعابير اليومية وسياقاتها الاجتماعية حسب المناطق</span>
+        </div>
+      </div>
+
+      <div class="lexicon-filters-bar">
+        <button class="lexicon-filter-btn active" data-filter="all">كل العبارات</button>
+        <button class="lexicon-filter-btn" data-filter="shared">مشترك بين الجميع</button>
+        <button class="lexicon-filter-btn" data-filter="riyadh">الوسطى ونجد</button>
+        <button class="lexicon-filter-btn" data-filter="jeddah">الغربية والحجاز</button>
+        <button class="lexicon-filter-btn" data-filter="asir">الجنوب وعسير</button>
+        <button class="lexicon-filter-btn" data-filter="hail">الشمال وحائل</button>
+        <button class="lexicon-filter-btn" data-filter="eastern">الشرقية والأحساء</button>
+      </div>
+
+      <div class="lexicon-grid-wrap" id="living-word-wall-grid"></div>
+    </div>
+  </section>
+
+  <!-- 11. "السعودية بيت واحد" — ONE HOME CULTURAL UNITY MODAL -->
+  <section class="experience-modal-overlay" id="onehome-overlay" aria-label="السعودية بيت واحد">
+    <div class="experience-modal-frame onehome-frame">
+      <div class="modal-top-bar">
+        <button class="btn-modal-back" data-back="hub">
+          <span>⟵ العودة إلى مساحة الاستكشاف</span>
+        </button>
+        <div class="modal-title-lockup">
+          <span class="modal-main-heading">🏡 السعودية بيت واحد</span>
+          <span class="modal-sub-heading">دفء المجالس، سنع الضيافة، والمشتركات التي تجمع كل بيت سعودي</span>
+        </div>
+      </div>
+
+      <div class="onehome-body-content">
+        <div class="onehome-tabs-nav">
+          <button class="onehome-tab active" data-content="hospitality">حفاوة الضيافة</button>
+          <button class="onehome-tab" data-content="coffee">سنع القهوة والدلة</button>
+          <button class="onehome-tab" data-content="eid">بهجة الأعياد</button>
+          <button class="onehome-tab" data-content="greetings">دفء السلام واللقاء</button>
+        </div>
+
+        <div class="onehome-display-box">
+          <blockquote class="majlis-quote" id="majlis-quote-text">
+            "يا هلا والله ومسهلا.. اقلطوا توّ ما نَوّر البيت، الفنجان باليمين، والقلوب أوسع من الدار."
+          </blockquote>
+          <span class="majlis-context" id="majlis-context-label">
+            آداب الضيافة وحفاوة الاستقبال الموروثة في كل بيت سعودي
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. CITY EXPLORATION & MINI-GAME ARENA (CITIES STAGE) -->
   <section class="city-world-overlay" id="city-world-overlay" aria-label="عالم المدينة المصغر والنشاط التفاعلي">
     <div class="city-hud-header">
       <button class="btn-back-kingdom" id="btn-back-to-map">
@@ -105,6 +356,10 @@
         <div class="city-badge-name" id="city-active-name">الطائف</div>
         <div class="city-badge-tag" id="city-active-tag">عروس المصايف ومدينة الورد</div>
       </div>
+
+      <button class="btn-back-kingdom" id="btn-city-to-hub">
+        <span>مساحة الاستكشاف 🧭</span>
+      </button>
     </div>
 
     <!-- Interactive Living City Activity Arena -->

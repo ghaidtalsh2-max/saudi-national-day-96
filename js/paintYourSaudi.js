@@ -1,338 +1,411 @@
 /**
- * paintYourSaudi.js - تجربة "ارسم سعوديتك" (طابع بريد اليوم الوطني السعودي 96)
- * يتيح للمستخدم كتابة اسمه وتصوره/خياله للسعودية،
- * ليقوم النظام بتوليد لوحة فنية بديعة داخل "طابع بريد تذكاري رسمي"
- * يحمل اسم المستخدم في الركن وشعار اليوم الوطني 96 والختم البريدي مع إمكانية التحميل.
+ * paintYourSaudi.js - تجربة "سعوديتك" (صانع طابع البريد التذكاري الرسمي لليوم الوطني السعودي 96)
+ * - يتيح للمستخدم كتابة تصوره أو اختيار عناصره المفضلة (طائف، ضباب، ورد، نجد، رواشين، مرايا، قهوة، خيل..)
+ * - يولد طابع بريد تذكاري رسمي متكامل فائق الدقة (Single Unified Saudi Postal Stamp)
+ * - يحتوي على مسننات الطابع، الختم البريدي الدائري، اسم المستخدم، القيمة البريدية ٩٦ هللة، وأزرار التحميل والطباعة.
  */
 
 import { sound } from './audioEngine.js';
 
 export class PaintYourSaudi {
   constructor() {
-    this.inputName = document.getElementById('user-name-input');
-    this.inputVision = document.getElementById('user-vision-input');
-    this.btnTransform = document.getElementById('btn-transform-painting');
-    this.processStage = document.getElementById('paint-process');
-    this.statusText = document.getElementById('process-status-text');
-    this.resultStage = document.getElementById('paint-result');
-    this.canvas = document.getElementById('generative-watercolor-canvas');
+    this.overlay = document.getElementById('paint-saudi-overlay');
+    this.inputName = document.getElementById('stamp-user-name');
+    this.inputVision = document.getElementById('stamp-vision-text');
+    this.btnGenerate = document.getElementById('btn-generate-stamp');
+    this.btnDownload = document.getElementById('btn-download-stamp');
+    this.btnPrint = document.getElementById('btn-print-stamp');
+    this.canvas = document.getElementById('postal-stamp-canvas');
     this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
 
-    this.btnRepaint = document.getElementById('btn-repaint');
-    this.btnModify = document.getElementById('btn-modify-prompt');
-    this.btnShare = document.getElementById('btn-share-canvas');
+    this.selectedTags = new Set();
 
     this.bindEvents();
+    // Render initial sample stamp
+    setTimeout(() => this.generateStamp(false), 300);
   }
 
   bindEvents() {
-    // Quick Inspiration tags
-    document.querySelectorAll('.tag-ink').forEach(tag => {
-      tag.addEventListener('click', () => {
-        if (this.inputVision) {
-          this.inputVision.value = tag.textContent.trim();
-          this.inputVision.focus();
+    // Quick Tag Buttons
+    document.querySelectorAll('.stamp-tag-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.playDrumBeat('tar', 120);
+        const tag = btn.getAttribute('data-tag');
+        if (this.selectedTags.has(tag)) {
+          this.selectedTags.delete(tag);
+          btn.classList.remove('active');
+        } else {
+          this.selectedTags.add(tag);
+          btn.classList.add('active');
+          if (this.inputVision && !this.inputVision.value.includes(tag)) {
+            this.inputVision.value = this.inputVision.value ? `${this.inputVision.value}، ${tag}` : tag;
+          }
         }
       });
     });
 
-    if (this.btnTransform) {
-      this.btnTransform.addEventListener('click', () => this.generateArtwork());
-    }
+    this.btnGenerate?.addEventListener('click', () => {
+      this.generateStamp(true);
+    });
 
-    if (this.btnRepaint) {
-      this.btnRepaint.addEventListener('click', () => this.generateArtwork());
-    }
+    this.btnDownload?.addEventListener('click', () => {
+      this.downloadStampImage();
+    });
 
-    if (this.btnModify) {
-      this.btnModify.addEventListener('click', () => {
-        if (this.resultStage) this.resultStage.style.display = 'none';
-        if (this.inputVision) {
-          this.inputVision.scrollIntoView({ behavior: 'smooth' });
-          this.inputVision.focus();
-        }
-      });
-    }
+    this.btnPrint?.addEventListener('click', () => {
+      this.printStamp();
+    });
+  }
 
-    if (this.btnShare) {
-      this.btnShare.addEventListener('click', () => this.downloadStampImage());
+  open() {
+    if (this.overlay) {
+      this.overlay.classList.add('active');
+      this.generateStamp(false);
     }
   }
 
-  generateArtwork() {
-    const userName = (this.inputName && this.inputName.value.trim()) || 'ابن الوطن الفخور';
-    const visionText = (this.inputVision && this.inputVision.value.trim()) || 'صحراء ذهبية، نخيل باسق، أبراج حديثة، وخيل عربي أصيل يركض نحو المستقبل';
-
-    if (this.resultStage) this.resultStage.style.display = 'none';
-    if (this.processStage) this.processStage.style.display = 'block';
-
-    this.updateStatus('نستلهم فكرتك وكلماتك...');
-    sound.playFalajWater();
-
-    setTimeout(() => {
-      this.updateStatus('نرسم ألوان التراث وتضاريس المملكة...');
-      sound.playBrassDallahResonance();
-    }, 1200);
-
-    setTimeout(() => {
-      this.updateStatus('نطبع طابع البريد التذكاري باسمك وهوية اليوم الوطني ٩٦...');
-      sound.playFinjanClink();
-    }, 2400);
-
-    setTimeout(() => {
-      this.renderPostalStamp(userName, visionText);
-      if (this.processStage) this.processStage.style.display = 'none';
-      if (this.resultStage) {
-        this.resultStage.style.display = 'flex';
-        this.resultStage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, 3600);
+  close() {
+    if (this.overlay) {
+      this.overlay.classList.remove('active');
+    }
   }
 
-  updateStatus(msg) {
-    if (this.statusText) {
-      this.statusText.style.opacity = '0';
-      setTimeout(() => {
-        this.statusText.textContent = msg;
-        this.statusText.style.opacity = '1';
-      }, 150);
+  generateStamp(playEffects = true) {
+    const userName = (this.inputName && this.inputName.value.trim()) || 'مواطن فخور بمجده';
+    const visionText = (this.inputVision && this.inputVision.value.trim()) || 'سعوديتي طائف باردة، فيها الجبال والضباب والورد وبيت قديم وقهوة مع أهلي';
+
+    if (playEffects) {
+      sound.playChime(720);
+      sound.playDrumBeat('tar', 140);
     }
+
+    this.renderPostalStamp(userName, visionText);
   }
 
   renderPostalStamp(userName, visionText) {
     if (!this.canvas || !this.ctx) return;
     const ctx = this.ctx;
-    const w = this.canvas.width = 900;
-    const h = this.canvas.height = 640;
+    const w = this.canvas.width = 1000;
+    const h = this.canvas.height = 700;
 
     ctx.clearRect(0, 0, w, h);
 
-    // 1. Perforated Stamp Outer Border (مسننات طابع البريد)
-    ctx.fillStyle = '#f5efe0';
+    // 1. Perforated Stamp Outer Paper Texture
+    ctx.fillStyle = '#f8f4ec';
     ctx.fillRect(0, 0, w, h);
 
-    // Perforation Holes (Cutouts around border)
-    ctx.fillStyle = '#1c1b18'; // Background bleed
-    const holeR = 8;
-    for (let x = 16; x < w; x += 24) {
+    // Stamp Perforation Cutout Holes (Around Borders)
+    ctx.fillStyle = '#0e120f'; // Matches deep background
+    const holeRadius = 10;
+    const step = 28;
+
+    // Top & Bottom Perforations
+    for (let x = step / 2; x < w; x += step) {
       ctx.beginPath();
-      ctx.arc(x, 0, holeR, 0, Math.PI);
+      ctx.arc(x, 0, holeRadius, 0, Math.PI);
       ctx.fill();
+
       ctx.beginPath();
-      ctx.arc(x, h, holeR, Math.PI, 0);
-      ctx.fill();
-    }
-    for (let y = 16; y < h; y += 24) {
-      ctx.beginPath();
-      ctx.arc(0, y, holeR, -Math.PI / 2, Math.PI / 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(w, y, holeR, Math.PI / 2, -Math.PI / 2);
+      ctx.arc(x, h, holeRadius, Math.PI, 0);
       ctx.fill();
     }
 
-    // 2. Royal Green Stamp Inner Frame
-    const framePad = 32;
-    ctx.strokeStyle = '#006C35';
-    ctx.lineWidth = 6;
-    ctx.strokeRect(framePad, framePad, w - framePad * 2, h - framePad * 2);
+    // Left & Right Perforations
+    for (let y = step / 2; y < h; y += step) {
+      ctx.beginPath();
+      ctx.arc(0, y, holeRadius, -Math.PI / 2, Math.PI / 2);
+      ctx.fill();
 
-    ctx.strokeStyle = '#D4AF37';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(framePad + 8, framePad + 8, w - (framePad + 8) * 2, h - (framePad + 8) * 2);
+      ctx.beginPath();
+      ctx.arc(w, y, holeRadius, Math.PI / 2, -Math.PI / 2);
+      ctx.fill();
+    }
 
-    // 3. Stamp Header: Kingdom of Saudi Arabia & 96th National Day
-    ctx.fillStyle = '#006C35';
-    ctx.font = 'bold 22px "Reem Kufi", sans-serif';
+    // 2. Royal Green & Gold Gilded Double Border
+    const pad = 38;
+    ctx.strokeStyle = '#006c35';
+    ctx.lineWidth = 8;
+    ctx.strokeRect(pad, pad, w - pad * 2, h - pad * 2);
+
+    ctx.strokeStyle = '#d4af37';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(pad + 10, pad + 10, w - (pad + 10) * 2, h - (pad + 10) * 2);
+
+    // Corner Ornaments
+    this.drawCornerFiligree(ctx, pad + 12, pad + 12);
+    this.drawCornerFiligree(ctx, w - pad - 12, pad + 12);
+    this.drawCornerFiligree(ctx, pad + 12, h - pad - 12);
+    this.drawCornerFiligree(ctx, w - pad - 12, h - pad - 12);
+
+    // 3. Stamp Header: Kingdom of Saudi Arabia • Postage 96
+    ctx.fillStyle = '#006c35';
+    ctx.font = 'bold 24px "Reem Kufi", "Amiri", sans-serif';
     ctx.textAlign = 'right';
-    ctx.fillText('المملكة العربية السعودية • البريد التذكاري', w - framePad - 24, framePad + 36);
+    ctx.fillText('المملكة العربية السعودية • البريد التذكاري', w - pad - 28, pad + 42);
 
-    ctx.font = 'bold 18px "Tajawal", sans-serif';
+    ctx.font = 'bold 18px "Tajawal", "Almarai", sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('KINGDOM OF SAUDI ARABIA • POSTAGE 96', framePad + 24, framePad + 36);
+    ctx.fillText('KINGDOM OF SAUDI ARABIA • POSTAGE 96', pad + 28, pad + 42);
 
-    // 4. Inner Artwork Canvas Area
-    const artX = framePad + 18;
-    const artY = framePad + 52;
-    const artW = w - (framePad + 18) * 2;
-    const artH = h - (framePad + 52) - 80;
+    // 4. Central Artwork Canvas Area
+    const artX = pad + 22;
+    const artY = pad + 60;
+    const artW = w - (pad + 22) * 2;
+    const artH = h - (pad + 60) - 95;
 
-    this.drawVisionScene(ctx, artX, artY, artW, artH, visionText);
+    this.drawCustomSaudiLandscape(ctx, artX, artY, artW, artH, visionText);
 
-    // 5. Official Postmark Stamp (ختم بريد الرياض الدائري التراثي)
-    this.drawPostalInkCancelStamp(ctx, w - 180, h - 160);
+    // 5. Official Circular Postmark Stamp (ختم البريد التراثي)
+    this.drawPostmarkSeal(ctx, w - 210, h - 180);
 
-    // 6. Stamp Footer: User Name, Dedication, & Postal Value
-    ctx.fillStyle = '#2b1d12';
-    ctx.font = 'bold 20px "Amiri", serif';
+    // 6. Stamp Footer: User Name Dedication & 96 Halalas Value
+    ctx.fillStyle = '#1c1712';
+    ctx.font = 'bold 22px "Amiri", "Aref Ruqaa", serif';
     ctx.textAlign = 'right';
-    ctx.fillText(`بريشة وتصوّر: ${userName}`, w - framePad - 24, h - framePad - 16);
+    ctx.fillText(`بريشة وتصوّر: ${userName}`, w - pad - 28, h - pad - 24);
 
-    ctx.fillStyle = '#D4AF37';
-    ctx.font = 'bold 24px "Reem Kufi", sans-serif';
+    ctx.fillStyle = '#d4af37';
+    ctx.font = 'bold 26px "Reem Kufi", "Almarai", sans-serif';
     ctx.textAlign = 'left';
-    ctx.fillText('٩٦ هللة • اليوم الوطني 96', framePad + 24, h - framePad - 16);
+    ctx.fillText('٩٦ هللة • اليوم الوطني 96', pad + 28, h - pad - 24);
   }
 
-  drawVisionScene(ctx, x, y, w, h, visionText) {
+  drawCornerFiligree(ctx, x, y) {
+    ctx.save();
+    ctx.fillStyle = '#d4af37';
+    ctx.beginPath();
+    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  drawCustomSaudiLandscape(ctx, x, y, w, h, text) {
     ctx.save();
     ctx.beginPath();
     ctx.rect(x, y, w, h);
     ctx.clip();
 
-    // Radiant golden sky
+    const lower = text.toLowerCase();
+    const hasTaif = lower.includes('طائف') || lower.includes('ورد') || lower.includes('هدا') || lower.includes('ضباب');
+    const hasSea = lower.includes('جدة') || lower.includes('بحر') || lower.includes('رواشين') || lower.includes('بلد');
+    const hasAlula = lower.includes('علا') || lower.includes('مرايا') || lower.includes('صخر') || lower.includes('حجر');
+    const hasAsir = lower.includes('عسير') || lower.includes('أبها') || lower.includes('سروات') || lower.includes('ألمع');
+
+    // 1. Sky Gradient
     const sky = ctx.createLinearGradient(x, y, x, y + h);
-    sky.addColorStop(0, '#fefbf3');
-    sky.addColorStop(0.4, '#faeed8');
-    sky.addColorStop(1, '#e3c59a');
+    if (hasTaif || hasAsir) {
+      // Foggy Mountain Sunset Sky
+      sky.addColorStop(0, '#c2d6e8');
+      sky.addColorStop(0.5, '#e8d5cc');
+      sky.addColorStop(1, '#f7dfc0');
+    } else if (hasSea) {
+      // Coastal Red Sea Blue & Coral Sunset
+      sky.addColorStop(0, '#3a7bd5');
+      sky.addColorStop(0.5, '#ffd194');
+      sky.addColorStop(1, '#ff8a5c');
+    } else {
+      // Golden Hour Desert Horizon
+      sky.addColorStop(0, '#fffaeb');
+      sky.addColorStop(0.4, '#faeed8');
+      sky.addColorStop(1, '#e3b878');
+    }
     ctx.fillStyle = sky;
     ctx.fillRect(x, y, w, h);
 
-    // Sun disc
-    ctx.fillStyle = 'rgba(255, 235, 175, 0.8)';
+    // 2. Radiant Sun / Glowing Orb
+    ctx.fillStyle = 'rgba(255, 245, 200, 0.75)';
     ctx.beginPath();
-    ctx.arc(x + w * 0.5, y + h * 0.35, 80, 0, Math.PI * 2);
+    ctx.arc(x + w * 0.45, y + h * 0.35, 75, 0, Math.PI * 2);
     ctx.fill();
 
-    // Tuwaiq Mountains / Sarawat
-    ctx.fillStyle = '#aa8357';
+    // 3. Mountain Backdrop (Tuwaiq, Sarawat, or AlUla Sandstone)
+    if (hasAlula) {
+      // Monumental Sandstone Cliffs of Hegra
+      ctx.fillStyle = '#b36b3f';
+      for (let i = 0; i < 6; i++) {
+        ctx.fillRect(x + i * 160, y + h * 0.28, 120, h * 0.5);
+      }
+    } else if (hasTaif || hasAsir) {
+      // Jagged Sarawat Peaks & Layered Fog
+      ctx.fillStyle = '#5c4838';
+      ctx.beginPath();
+      ctx.moveTo(x, y + h * 0.55);
+      ctx.lineTo(x + w * 0.22, y + h * 0.25);
+      ctx.lineTo(x + w * 0.48, y + h * 0.42);
+      ctx.lineTo(x + w * 0.75, y + h * 0.22);
+      ctx.lineTo(x + w, y + h * 0.48);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.fill();
+
+      // Atmospheric White Mist / Fog Waves
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.fillRect(x, y + h * 0.45, w, 40);
+    } else {
+      // Majestic Tuwaiq Escarpment
+      ctx.fillStyle = '#ab814e';
+      ctx.beginPath();
+      ctx.moveTo(x, y + h * 0.55);
+      ctx.lineTo(x + w * 0.3, y + h * 0.38);
+      ctx.lineTo(x + w * 0.6, y + h * 0.48);
+      ctx.lineTo(x + w * 0.85, y + h * 0.32);
+      ctx.lineTo(x + w, y + h * 0.48);
+      ctx.lineTo(x + w, y + h);
+      ctx.lineTo(x, y + h);
+      ctx.fill();
+    }
+
+    // 4. Foreground Terrain & Golden Sand Dunes / Terraces
+    ctx.fillStyle = '#d4a464';
     ctx.beginPath();
-    ctx.moveTo(x, y + h * 0.55);
-    ctx.lineTo(x + w * 0.25, y + h * 0.38);
-    ctx.lineTo(x + w * 0.55, y + h * 0.48);
-    ctx.lineTo(x + w * 0.85, y + h * 0.3);
-    ctx.lineTo(x + w, y + h * 0.45);
+    ctx.moveTo(x, y + h * 0.68);
+    ctx.quadraticCurveTo(x + w * 0.35, y + h * 0.58, x + w * 0.65, y + h * 0.72);
+    ctx.quadraticCurveTo(x + w * 0.85, y + h * 0.78, x + w, y + h * 0.64);
     ctx.lineTo(x + w, y + h);
     ctx.lineTo(x, y + h);
     ctx.fill();
 
-    // Golden Dunes
-    ctx.fillStyle = '#d4a86a';
-    ctx.beginPath();
-    ctx.moveTo(x, y + h * 0.65);
-    ctx.quadraticCurveTo(x + w * 0.35, y + h * 0.55, x + w * 0.7, y + h * 0.7);
-    ctx.quadraticCurveTo(x + w * 0.85, y + h * 0.75, x + w, y + h * 0.62);
-    ctx.lineTo(x + w, y + h);
-    ctx.lineTo(x, y + h);
-    ctx.fill();
-
-    // Modern Skylines (Kingdom Tower silhouette & Futuristic spires)
-    ctx.fillStyle = 'rgba(30, 80, 50, 0.5)';
-    // Kingdom Centre
-    const ktX = x + w * 0.78;
-    ctx.fillRect(ktX - 18, y + h * 0.25, 36, h * 0.5);
-    // Arch
+    // 5. Modern Skyline Silhouette (Kingdom Centre Arch & KAFD)
+    ctx.fillStyle = 'rgba(18, 64, 42, 0.6)';
+    const ktX = x + w * 0.82;
+    ctx.fillRect(ktX - 16, y + h * 0.22, 32, h * 0.5);
     ctx.fillStyle = '#faeed8';
     ctx.beginPath();
-    ctx.arc(ktX, y + h * 0.32, 10, 0, Math.PI);
+    ctx.arc(ktX, y + h * 0.30, 9, 0, Math.PI);
     ctx.fill();
 
-    // Palms in foreground
-    this.drawStampPalm(ctx, x + w * 0.15, y + h * 0.78, 1.2);
-    this.drawStampPalm(ctx, x + w * 0.26, y + h * 0.82, 0.9);
+    // 6. Traditional Palms
+    this.drawPalmSilhouette(ctx, x + w * 0.14, y + h * 0.82, 1.3);
+    this.drawPalmSilhouette(ctx, x + w * 0.24, y + h * 0.86, 0.95);
 
-    // Galloping Arabian Horse
-    this.drawStampHorse(ctx, x + w * 0.52, y + h * 0.76);
+    // 7. Taif Roses Floating in Breeze
+    if (hasTaif || lower.includes('ورد')) {
+      for (let r = 0; r < 8; r++) {
+        this.drawRosePetal(ctx, x + w * (0.2 + r * 0.08), y + h * (0.55 + Math.sin(r) * 0.15));
+      }
+    }
+
+    // 8. Dallah & Finjan
+    if (lower.includes('قهوة') || lower.includes('دلة')) {
+      this.drawDallahSilhouette(ctx, x + w * 0.48, y + h * 0.82);
+    }
 
     ctx.restore();
   }
 
-  drawStampPalm(ctx, px, py, scale) {
+  drawPalmSilhouette(ctx, px, py, scale) {
     ctx.save();
     ctx.translate(px, py);
     ctx.scale(scale, scale);
-    ctx.strokeStyle = '#4e331c';
-    ctx.lineWidth = 7;
+    ctx.strokeStyle = '#422a16';
+    ctx.lineWidth = 6;
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.quadraticCurveTo(6, -40, 0, -80);
+    ctx.quadraticCurveTo(5, -45, 0, -85);
     ctx.stroke();
 
-    ctx.fillStyle = '#1b5e20';
-    for (let i = 0; i < 7; i++) {
-      const a = (i / 7) * Math.PI * 2;
+    ctx.fillStyle = '#225528';
+    for (let i = 0; i < 8; i++) {
+      const ang = (i / 8) * Math.PI * 2;
       ctx.beginPath();
-      ctx.arc(Math.cos(a) * 32, -80 + Math.sin(a) * 18, 16, 0, Math.PI * 2);
+      ctx.arc(Math.cos(ang) * 18, -85 + Math.sin(ang) * 12, 16, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
   }
 
-  drawStampHorse(ctx, px, py) {
+  drawRosePetal(ctx, rx, ry) {
     ctx.save();
-    ctx.translate(px, py);
-    ctx.fillStyle = '#22150c';
-    // Body
+    ctx.fillStyle = '#e83e8c';
     ctx.beginPath();
-    ctx.ellipse(0, 0, 22, 11, 0.15, 0, Math.PI * 2);
+    ctx.arc(rx, ry, 7, 0, Math.PI * 2);
     ctx.fill();
-    // Neck & Head
+    ctx.fillStyle = '#ff79b0';
     ctx.beginPath();
-    ctx.moveTo(12, -4);
-    ctx.lineTo(24, -22);
-    ctx.lineTo(30, -18);
-    ctx.lineTo(18, 6);
+    ctx.arc(rx + 2, ry - 2, 4, 0, Math.PI * 2);
     ctx.fill();
-    // Legs
-    ctx.strokeStyle = '#22150c';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(14, 6);
-    ctx.lineTo(24, 25);
-    ctx.moveTo(-12, 6);
-    ctx.lineTo(-22, 25);
-    ctx.stroke();
     ctx.restore();
   }
 
-  drawPostalInkCancelStamp(ctx, cx, cy) {
+  drawDallahSilhouette(ctx, dx, dy) {
+    ctx.save();
+    ctx.translate(dx, dy);
+    ctx.fillStyle = '#d4af37';
+    ctx.beginPath();
+    ctx.moveTo(-12, 0);
+    ctx.lineTo(12, 0);
+    ctx.lineTo(8, -28);
+    ctx.lineTo(14, -36);
+    ctx.lineTo(0, -52);
+    ctx.lineTo(-14, -36);
+    ctx.lineTo(-8, -28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  drawPostmarkSeal(ctx, cx, cy) {
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(-0.15); // Slight tilt like real ink rubber stamp
+    ctx.rotate(-0.14);
 
-    ctx.strokeStyle = 'rgba(180, 40, 40, 0.65)'; // Classic red postmark ink
+    ctx.strokeStyle = 'rgba(0, 108, 53, 0.75)';
     ctx.lineWidth = 2.5;
 
-    // Double Ring
+    // Outer Circle
     ctx.beginPath();
     ctx.arc(0, 0, 52, 0, Math.PI * 2);
     ctx.stroke();
 
+    // Inner Circle
     ctx.beginPath();
-    ctx.arc(0, 0, 44, 0, Math.PI * 2);
+    ctx.arc(0, 0, 36, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Arabic Stamp Text
-    ctx.fillStyle = 'rgba(180, 40, 40, 0.75)';
-    ctx.font = 'bold 12px "Tajawal", sans-serif';
+    // Postmark Text
+    ctx.fillStyle = 'rgba(0, 108, 53, 0.85)';
+    ctx.font = 'bold 10px "Almarai", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('بريد المملكة العربية السعودية', 0, -22);
-    ctx.font = 'bold 15px "Reem Kufi", sans-serif';
-    ctx.fillText('اليوم الوطني ٩٦', 0, 4);
-    ctx.font = '11px sans-serif';
-    ctx.fillText('23 SEP 2026', 0, 24);
-
-    // Cancellation wavy lines
-    ctx.beginPath();
-    for (let w = 60; w <= 140; w += 20) {
-      ctx.moveTo(w, -15);
-      ctx.quadraticCurveTo(w + 10, 0, w, 15);
-    }
-    ctx.stroke();
+    ctx.textBaseline = 'middle';
+    ctx.fillText('بريد الرياض • RIYADH', 0, -22);
+    ctx.font = 'bold 12px "Reem Kufi", sans-serif';
+    ctx.fillText('اليوم الوطني ٩٦', 0, 0);
+    ctx.font = '10px "Tajawal", sans-serif';
+    ctx.fillText('23 SEPT 2026', 0, 22);
 
     ctx.restore();
   }
 
   downloadStampImage() {
     if (!this.canvas) return;
-    try {
-      const link = document.createElement('a');
-      link.download = 'saudi96-national-day-stamp.png';
-      link.href = this.canvas.toDataURL('image/png');
-      link.click();
-      sound.playFinjanClink();
-    } catch (e) {
-      console.warn('Download error:', e);
+    sound.playChime(680);
+    const link = document.createElement('a');
+    link.download = `طابع_سعوديتك_اليوم_الوطني_96.png`;
+    link.href = this.canvas.toDataURL('image/png', 1.0);
+    link.click();
+  }
+
+  printStamp() {
+    if (!this.canvas) return;
+    sound.playChime(640);
+    const dataUrl = this.canvas.toDataURL('image/png', 1.0);
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html dir="rtl">
+        <head>
+          <title>طابع سعوديتك — اليوم الوطني السعودي 96</title>
+          <style>
+            body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #fafafa; font-family: sans-serif; }
+            img { max-width: 90%; max-height: 90%; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+          </style>
+        </head>
+        <body onload="window.print(); window.close();">
+          <img src="${dataUrl}" alt="طابع سعوديتك">
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
     }
   }
 }
